@@ -8,6 +8,9 @@
 #include <ti/grlib/grlib.h>
 #include "LcdDriver/Crystalfontz128x128_ST7735.h"
 
+#include "ButtonLED_HAL.h"
+
+
 void make_5digit_NumString(unsigned int num, char *string)
 {
     string[0]= (        num  / 10000) +'0';
@@ -20,9 +23,8 @@ void make_5digit_NumString(unsigned int num, char *string)
 
 void make_2digit_NumString(unsigned int num, char *string)
 {
-    string[1]= ((num%100) / 10) +'0';
-    string[2]= ((num%10) / 1) +'0';
-    string[3]= 0;
+    string[0]= ((num%100) / 10) +'0';
+    string[1]= ((num%10) / 1) +'0';
 }
 
 void drawXY(Graphics_Context *g_sContext_p, unsigned int x, unsigned int y)
@@ -133,7 +135,7 @@ void InitGraphics(Graphics_Context *g_sContext_p)
                          &g_sCrystalfontz128x128_funcs);
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
     Graphics_setBackgroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-    Graphics_setFont(g_sContext_p, &g_sFontCmtt12);
+    Graphics_setFont(g_sContext_p, &g_sFontCm12);
 
     InitFonts();
 
@@ -144,15 +146,13 @@ void displayMenu(Graphics_Context *g_sContext_p, int *i)
 {
     if(*i == 0)
     {
+        turnOff_BoosterpackLED_red();
         Graphics_fillCircle(g_sContext_p, 20, 55, 4);
         *i = 1;
     }
     Graphics_drawString(g_sContext_p,(int8_t*) "PLAY", -1, 30, 50, true);
     Graphics_drawString(g_sContext_p,(int8_t*) "HIGHSCORE", -1, 30, 70, true);
     Graphics_drawString(g_sContext_p,(int8_t*) "HOW TO PLAY", -1, 30, 90, true);
-
-    //extern Graphics_Image Menu8BPP_UNCOMP;
-    //Graphics_drawImage(g_sContext_p, &Menu8BPP_UNCOMP, 0, 0);
 }
 
 void display_Empty(Graphics_Context *g_sContext_p)
@@ -166,26 +166,57 @@ void display_Empty(Graphics_Context *g_sContext_p)
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
 }
 
+void display_game(Graphics_Context *g_sContext_p, int score[3])
+{
+    Graphics_Rectangle Rec = {80,5, 120, 120};
+
+    Graphics_drawRectangle(g_sContext_p, &Rec);
+
+    Graphics_drawLineV(g_sContext_p, 100, 5, 120);
+    Graphics_drawLineH(g_sContext_p, 80, 120, 28);
+    Graphics_drawLineH(g_sContext_p, 80, 120, 51);
+    Graphics_drawLineH(g_sContext_p, 80, 120, 74);
+    Graphics_drawLineH(g_sContext_p, 80, 120, 97);
+
+    Graphics_drawLineV(g_sContext_p, 75, 5, 120);
+    Graphics_drawLineV(g_sContext_p, 35, 5, 120);
+
+
+
+}
+
+void display_High_Score(Graphics_Context *g_sContext_p, int score[3])
+{
+    char string1[3];
+    char string2[3];
+    char string3[3];
+
+    unsigned int num = score[0];
+    make_2digit_NumString(num, string1);
+
+    Graphics_drawString(g_sContext_p,(int8_t*) "HIGH SCORES", -1, 25, 10, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) string1, -1, 5, 40, true);
+
+    num = score[1];
+    make_2digit_NumString(num, string2);
+
+    Graphics_drawString(g_sContext_p,(int8_t*) string2, -1, 5, 60, true);
+
+    num = score[2];
+    make_2digit_NumString(num, string3);
+
+    Graphics_drawString(g_sContext_p,(int8_t*) string3, -1, 5, 80, true);
+}
+
 
 void display_How_To_Play(Graphics_Context *g_sContext_p, int menu_location)
 {
-    /*Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-    Graphics_drawString(g_sContext_p,(int8_t*) "PLAY", -1, 30, 50, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "HIGHSCORE", -1, 30, 70, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "HOW TO PLAY", -1, 30, 90, true);
-    Graphics_fillCircle(g_sContext_p, 20,menu_location , 4);*/
-
-    extern Graphics_Image How_to_play8BPP_UNCOMP;
-    Graphics_drawImage(g_sContext_p, &How_to_play8BPP_UNCOMP, 0, 0);
-
-    /*Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-    Graphics_drawString(g_sContext_p,(int8_t*) "How to Play:", -1, 24, 10, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "The game begins", -1, 10, 20, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "in the Throwing", -1, 10, 30, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "Mode:Use the JoyStick Up/", -1, 10, 40, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "Down to select High,", -1, 10, 50, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "Medium and Low", -1, 10, 60, true);
-    Graphics_drawString(g_sContext_p,(int8_t*) "S1: Throw & position the ball", -1, 10, 70, true);*/
-    //Graphics_drawString(g_sContext_p,(int8_t*) "Medium and Low", -1, 10, 80, true);
-    //Graphics_drawString(g_sContext_p,(int8_t*) "Medium and Low", -1, 10, 90, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "How to Play:", -1, 24, 5, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "The game begins in", -1, 5, 20, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "the Throwing Mode:", -1, 5, 35, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Use the JoyStick Up/", -1, 5, 50, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Down to select High,", -1, 5, 65, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Medium and Low", -1, 5, 80, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "S1: Throw & position", -1, 5, 95, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "S2: Throw to direct", -1, 5, 110, true);
 }

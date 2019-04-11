@@ -35,6 +35,7 @@ void game()
     static game_options game = Main;
     static int menu_location = 55;
     static int i = 0;
+    static int score[3] = {0,0,0};
 
     button_t LauchpadLeftButton = {GPIO_PORT_P1, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0_BASE};
     button_t LauchpadRightButton = {GPIO_PORT_P1, GPIO_PIN4, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
@@ -54,33 +55,44 @@ void game()
             displayMenu(&g_sContext, &i);
             if(JoyStick_pressed() && menu_location == 55)
             {
+                display_Empty(&g_sContext);
                 game = main_game;
             }
             else if(JoyStick_pressed() && menu_location == 75)
             {
+                display_Empty(&g_sContext);
                 game = highscore;
             }
             else if(JoyStick_pressed() && menu_location == 95)
             {
+                display_Empty(&g_sContext);
                 game = how_to_play;
             }
             break;
         case how_to_play:
             display_How_To_Play(&g_sContext, menu_location);
-            if(JoyStick_pressed())
+            if(JoyStick_pressed() == true)
             {
                 turnOn_BoosterpackLED_red();
-
                 display_Empty(&g_sContext);
+                menu_location = 55;
                 i = 0;
                 game = Menu;
             }
             break;
         case highscore:
-
+            display_High_Score(&g_sContext,score);
+            if(JoyStick_pressed() == true)
+            {
+                turnOn_BoosterpackLED_red();
+                display_Empty(&g_sContext);
+                menu_location = 55;
+                i = 0;
+                game = Menu;
+            }
             break;
         case main_game:
-
+            display_game(&g_sContext,score);
             break;
     }
 

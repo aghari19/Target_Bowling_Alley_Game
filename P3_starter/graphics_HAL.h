@@ -18,6 +18,8 @@ void draw_One_Zero(Graphics_Context *g_sContext_p, unsigned int vx, unsigned int
 void displayMenu(Graphics_Context *g_sContext_p, int *i);
 void display_How_To_Play(Graphics_Context *g_sContext_p, int menu_location);
 void display_Empty(Graphics_Context *g_sContext_p);
+void display_High_Score(Graphics_Context *g_sContext_p, int score[3]);
+void display_game(Graphics_Context *g_sContext_p, int score[3]);
 
 
 
