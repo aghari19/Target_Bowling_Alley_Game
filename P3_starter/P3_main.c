@@ -4,7 +4,6 @@
 #include "graphics_HAL.h"
 #include "Timer32_HAL.h"
 #include "ADC_HAL.h"
-//#include "setup.c"
 
 #define COUNT 144000000
 
@@ -49,9 +48,25 @@ void initialize()
     initialize_BoosterpackLED_red();
     initialize_BoosterpackLED_green();
     initialize_BoosterpackLED_blue();
+    initialize_LaunchpadLED1();
+    initialize_LaunchpadLED2_red();
+    initialize_LaunchpadLED2_green();
+    initialize_LaunchpadLED2_blue();
+
+    turnOff_LaunchpadLED1();
+    turnOff_LaunchpadLED2_red();
+    turnOff_LaunchpadLED2_green();
+    turnOff_LaunchpadLED2_blue();
     turnOff_BoosterpackLED_red();
     turnOff_BoosterpackLED_green();
     turnOff_BoosterpackLED_blue();
+
+    //initializing the booster Pack buttons
+    initialize_BoosterpackTopButton();
+    initialize_BoosterpackBottomButton();
+
+    //initializing the joystick button
+    initialize_JoyStickButton();
 
     // initialize the Launchpad buttons
     initialize_LaunchpadLeftButton();

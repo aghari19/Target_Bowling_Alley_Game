@@ -66,6 +66,8 @@ void initialize_LaunchpadRightButton();
 void initialize_BoosterpackTopButton();
 void initialize_BoosterpackBottomButton();
 
+void initialize_JoyStickButton();
+
 char switchStatus_LaunchpadLeft();
 char switchStatus_LaunchpadRight();
 char switchStatus_BoosterpackTop();
@@ -75,6 +77,7 @@ char LaunchpadLeftButton_pressed();
 char LaunchpadRightButton_pressed();
 char BoosterpackTopButton_pressed();
 char BoosterpackBottomButton_pressed();
+char JoystickButton_pressed();
 
 bool ButtonPushed(button_t *button);
 

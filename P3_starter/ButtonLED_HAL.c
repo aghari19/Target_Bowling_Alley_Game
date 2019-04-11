@@ -187,6 +187,11 @@ void initialize_BoosterpackBottomButton()
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P3, GPIO_PIN5);
 }
 
+void initialize_JoyStickButton()
+{
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P4, GPIO_PIN1);
+}
+
 char switchStatus_LaunchpadLeft()
 {
     return (GPIO_getInputPinValue(GPIO_PORT_P1, GPIO_PIN1));
@@ -207,8 +212,6 @@ char switchStatus_BoosterpackBottom()
     return (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN5));
 }
 
-
-
 char LaunchpadLeftButton_pressed()
 {
     return ((GPIO_getInputPinValue(GPIO_PORT_P1, GPIO_PIN1)) == PRESSED);
@@ -227,6 +230,10 @@ char BoosterpackBottomButton_pressed()
     return ((GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN5)) == PRESSED);
 }
 
+char JoystickButton_pressed()
+{
+    return ((GPIO_getInputPinValue(GPIO_PORT_P4, GPIO_PIN1)) == PRESSED);
+}
 
 //------------------------------------------
 // Debounce FSM

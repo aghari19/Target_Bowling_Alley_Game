@@ -16,10 +16,12 @@ void InitGraphics(Graphics_Context *g_sContext_p);
 void drawXY(Graphics_Context *g_sContext_p, unsigned int x, unsigned int y);
 void draw_One_Zero(Graphics_Context *g_sContext_p, unsigned int vx, unsigned int vy);
 void displayMenu(Graphics_Context *g_sContext_p, int *i);
-void display_How_To_Play(Graphics_Context *g_sContext_p, int menu_location);
+void display_How_To_Play(Graphics_Context *g_sContext_p);
 void display_Empty(Graphics_Context *g_sContext_p);
 void display_High_Score(Graphics_Context *g_sContext_p, int score[3]);
 void display_game(Graphics_Context *g_sContext_p, int score[3]);
+
+void Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight);
 
 
 

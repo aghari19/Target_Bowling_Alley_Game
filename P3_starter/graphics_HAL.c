@@ -9,6 +9,8 @@
 #include "LcdDriver/Crystalfontz128x128_ST7735.h"
 
 #include "ButtonLED_HAL.h"
+#include "ADC_HAL.h"
+#include "graphics_HAL.h"
 
 
 void make_5digit_NumString(unsigned int num, char *string)
@@ -60,6 +62,27 @@ void make_3digit_NumString(unsigned int num, char *string)
     string[2]= (num%10)+'0';
     string[3] =0;
 
+}
+
+void Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)
+{
+    turnOff_BoosterpackLED_blue();
+    static unsigned int x = 55;
+
+    if ((moveToLeft && (x>35)) || (moveToRight && (x<70)))
+        {
+
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_fillCircle(g_sContext_p, x,115, 3);
+
+            if (moveToLeft)
+                x = x-5;
+            if(moveToRight)
+                x = x+5;
+
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            Graphics_fillCircle(g_sContext_p, x,115, 3);
+        }
 }
 
 
@@ -168,7 +191,10 @@ void display_Empty(Graphics_Context *g_sContext_p)
 
 void display_game(Graphics_Context *g_sContext_p, int score[3])
 {
+    static int ball_position = 55;
     Graphics_Rectangle Rec = {80,5, 120, 120};
+
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
 
     Graphics_drawRectangle(g_sContext_p, &Rec);
 
@@ -181,8 +207,7 @@ void display_game(Graphics_Context *g_sContext_p, int score[3])
     Graphics_drawLineV(g_sContext_p, 75, 5, 120);
     Graphics_drawLineV(g_sContext_p, 35, 5, 120);
 
-
-
+    Graphics_fillCircle(g_sContext_p, ball_position, 115, 3);
 }
 
 void display_High_Score(Graphics_Context *g_sContext_p, int score[3])
@@ -191,10 +216,11 @@ void display_High_Score(Graphics_Context *g_sContext_p, int score[3])
     char string2[3];
     char string3[3];
 
+    Graphics_drawString(g_sContext_p,(int8_t*) "HIGH SCORES", -1, 25, 10, true);
+
     unsigned int num = score[0];
     make_2digit_NumString(num, string1);
 
-    Graphics_drawString(g_sContext_p,(int8_t*) "HIGH SCORES", -1, 25, 10, true);
     Graphics_drawString(g_sContext_p,(int8_t*) string1, -1, 5, 40, true);
 
     num = score[1];
@@ -208,8 +234,7 @@ void display_High_Score(Graphics_Context *g_sContext_p, int score[3])
     Graphics_drawString(g_sContext_p,(int8_t*) string3, -1, 5, 80, true);
 }
 
-
-void display_How_To_Play(Graphics_Context *g_sContext_p, int menu_location)
+void display_How_To_Play(Graphics_Context *g_sContext_p)
 {
     Graphics_drawString(g_sContext_p,(int8_t*) "How to Play:", -1, 24, 5, true);
     Graphics_drawString(g_sContext_p,(int8_t*) "The game begins in", -1, 5, 20, true);

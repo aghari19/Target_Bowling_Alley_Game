@@ -22,11 +22,11 @@ typedef enum {Main, Menu, how_to_play, highscore, main_game} game_options;
 typedef enum {up, not_up} joystick_position_up;
 typedef enum {down, not_down} joystick_position_down;
 
+button_t JoyStick_Button = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
+
 bool IsJoystickDown_debounced(unsigned Vy);
 bool IsJoystickUp_debounced(unsigned Vy);
-
-char JoyStick_pressed();
-
+void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3]);
 
 void game()
 {
@@ -36,69 +36,72 @@ void game()
     static int menu_location = 55;
     static int i = 0;
     static int score[3] = {0,0,0};
+    static bool isMenu = false;
 
-    button_t LauchpadLeftButton = {GPIO_PORT_P1, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0_BASE};
-    button_t LauchpadRightButton = {GPIO_PORT_P1, GPIO_PIN4, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
-
-    getSampleJoyStick(&vx, &vy);
-
+    bool joystick_button_pressed = false;
     bool joyStickPushedUp = false;
     bool joyStickPushedDown = false;
+
+    joystick_button_pressed = ButtonPushed(&JoyStick_Button);
+    getSampleJoyStick(&vx, &vy);
 
     switch (game)
     {
         case Main:
             InitGraphics (&g_sContext);
             game = Menu;
+            isMenu = true;
             break;
         case Menu:
             displayMenu(&g_sContext, &i);
-            if(JoyStick_pressed() && menu_location == 55)
+            if((joystick_button_pressed) && (menu_location == 55))
             {
                 display_Empty(&g_sContext);
                 game = main_game;
+                isMenu = false;
             }
-            else if(JoyStick_pressed() && menu_location == 75)
+            else if((joystick_button_pressed) && (menu_location == 75))
             {
                 display_Empty(&g_sContext);
                 game = highscore;
+                isMenu = false;
             }
-            else if(JoyStick_pressed() && menu_location == 95)
+            else if((joystick_button_pressed) && (menu_location == 95))
             {
                 display_Empty(&g_sContext);
                 game = how_to_play;
+                isMenu = false;
             }
             break;
         case how_to_play:
-            display_How_To_Play(&g_sContext, menu_location);
-            if(JoyStick_pressed() == true)
+            display_How_To_Play(&g_sContext);
+            if(joystick_button_pressed)
             {
-                turnOn_BoosterpackLED_red();
                 display_Empty(&g_sContext);
-                menu_location = 55;
-                i = 0;
+                Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
                 game = Menu;
+                isMenu = true;
             }
             break;
         case highscore:
             display_High_Score(&g_sContext,score);
-            if(JoyStick_pressed() == true)
+            if(joystick_button_pressed)
             {
-                turnOn_BoosterpackLED_red();
+                turnOff_LaunchpadLED1();
                 display_Empty(&g_sContext);
-                menu_location = 55;
-                i = 0;
+                Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
                 game = Menu;
+                isMenu = true;
             }
             break;
         case main_game:
-            display_game(&g_sContext,score);
+            Bowling_Alley(&g_sContext, score);
             break;
     }
 
     joyStickPushedDown = IsJoystickDown_debounced(vy);
     joyStickPushedUp = IsJoystickUp_debounced(vy);
-    if(joyStickPushedDown | joyStickPushedUp)
+    if((joyStickPushedDown | joyStickPushedUp) && isMenu)
     {
         menu_location = MoveCircle(&g_sContext, joyStickPushedUp,joyStickPushedDown);
     }
@@ -154,10 +157,3 @@ bool IsJoystickDown_debounced(unsigned Vy)
     }
    return isPushed;
 }
-
-char JoyStick_pressed()
-{
-    return ((GPIO_getInputPinValue(GPIO_PORT_P4, GPIO_PIN1)) == 0);
-
-}
-
