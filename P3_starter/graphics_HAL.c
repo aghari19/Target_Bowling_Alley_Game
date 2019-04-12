@@ -11,7 +11,15 @@
 #include "ButtonLED_HAL.h"
 #include "ADC_HAL.h"
 #include "graphics_HAL.h"
+#include "Timer32_HAL.h"
 
+HWTimer_t timer0, timer1;
+
+#define T10MS_IN_US 100
+#define BLOCKING_WAIT_TIME 1000000
+
+#define BALL_Y_STEP 100                // The ball moves in y direction 10 pixesl per step
+#define BALL_TIME_STEP T10MS_IN_US
 
 void make_5digit_NumString(unsigned int num, char *string)
 {
@@ -64,16 +72,57 @@ void make_3digit_NumString(unsigned int num, char *string)
 
 }
 
-void Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)
+void roll_ball(Graphics_Context *g_sContext_p, int position)
+{
+
+
+    /*static unsigned int y = 115;
+    static bool moveBallUp = true;
+    static OneShotSWTimer_t yMoveTimer;
+    static bool init = true;
+    if (init)
+    {
+        InitOneShotSWTimer(&yMoveTimer, &timer0, BALL_TIME_STEP);
+        StartOneShotSWTimer(&yMoveTimer);
+
+        init = false;
+    }
+    if (OneShotSWTimerExpired(&yMoveTimer))
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, position, y, 4);
+
+        StartOneShotSWTimer(&yMoveTimer);
+        if (moveBallUp)
+        {
+            y = y - BALL_Y_STEP;
+            if (y > 1)
+                moveBallUp = false;
+        }
+        else
+        {
+            y = y - BALL_Y_STEP;
+            if (y < 50)
+                moveBallUp = true;
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, position, y, 4);
+    }*/
+}
+
+int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)
 {
     turnOff_BoosterpackLED_blue();
     static unsigned int x = 55;
 
-    if ((moveToLeft && (x>35)) || (moveToRight && (x<70)))
+    if ((moveToLeft && (x>40)) || (moveToRight && (x<70)))
         {
-
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_fillCircle(g_sContext_p, x,115, 3);
+            Graphics_drawLineV(g_sContext_p, x, 108, 116);
+            Graphics_fillCircle(g_sContext_p, x, 107, 1);
+
 
             if (moveToLeft)
                 x = x-5;
@@ -83,6 +132,7 @@ void Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             Graphics_fillCircle(g_sContext_p, x,115, 3);
         }
+    return x;
 }
 
 
@@ -208,6 +258,8 @@ void display_game(Graphics_Context *g_sContext_p, int score[3])
     Graphics_drawLineV(g_sContext_p, 35, 5, 120);
 
     Graphics_fillCircle(g_sContext_p, ball_position, 115, 3);
+    Graphics_drawLineV(g_sContext_p, ball_position, 108, 116);
+    Graphics_fillCircle(g_sContext_p, ball_position, 107, 1);
 }
 
 void display_High_Score(Graphics_Context *g_sContext_p, int score[3])
