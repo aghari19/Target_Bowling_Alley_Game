@@ -15,10 +15,10 @@
 
 HWTimer_t timer0, timer1;
 
-#define T10MS_IN_US 100
+#define T10MS_IN_US 100000
 #define BLOCKING_WAIT_TIME 1000000
 
-#define BALL_Y_STEP 100                // The ball moves in y direction 10 pixesl per step
+#define BALL_Y_STEP 10                // The ball moves in y direction 10 pixesl per step
 #define BALL_TIME_STEP T10MS_IN_US
 
 void make_5digit_NumString(unsigned int num, char *string)
@@ -72,11 +72,9 @@ void make_3digit_NumString(unsigned int num, char *string)
 
 }
 
-void roll_ball(Graphics_Context *g_sContext_p, int position)
+bool roll_ball(Graphics_Context *g_sContext_p, int position)
 {
-
-
-    /*static unsigned int y = 115;
+    static unsigned int y = 115;
     static bool moveBallUp = true;
     static OneShotSWTimer_t yMoveTimer;
     static bool init = true;
@@ -87,7 +85,7 @@ void roll_ball(Graphics_Context *g_sContext_p, int position)
 
         init = false;
     }
-    if (OneShotSWTimerExpired(&yMoveTimer))
+    if(OneShotSWTimerExpired(&yMoveTimer))
     {
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
         Graphics_fillCircle(g_sContext_p, position, y, 4);
@@ -99,16 +97,11 @@ void roll_ball(Graphics_Context *g_sContext_p, int position)
             if (y > 1)
                 moveBallUp = false;
         }
-        else
-        {
-            y = y - BALL_Y_STEP;
-            if (y < 50)
-                moveBallUp = true;
-        }
 
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, position, y, 4);
-    }*/
+    }
+    return moveBallUp;
 }
 
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)

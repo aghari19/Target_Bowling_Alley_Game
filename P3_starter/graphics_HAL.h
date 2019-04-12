@@ -22,7 +22,7 @@ void display_High_Score(Graphics_Context *g_sContext_p, int score[3]);
 void display_game(Graphics_Context *g_sContext_p, int score[3]);
 
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight);
-void roll_ball(Graphics_Context *g_sContext_p, int position);
+bool roll_ball(Graphics_Context *g_sContext_p, int position);
 
 
 #endif /* GRAPHICS_HAL_H_ */
