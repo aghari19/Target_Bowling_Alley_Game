@@ -7,8 +7,6 @@
 
 #define COUNT 144000000
 
-
-
 void initialize();
 void game();
 
@@ -78,6 +76,9 @@ void initialize()
                        TIMER32_PRESCALER_1, // The prescaler value is 1; The clock is not divided before feeding the counter
                        TIMER32_32BIT, // The counter is used in 32-bit mode; the alternative is 16-bit mode
                        TIMER32_PERIODIC_MODE); //This options is irrelevant for a one-shot timer
+
+    Timer32_setCount(TIMER32_0_BASE, 1);
+    Timer32_startTimer(TIMER32_0_BASE, true);
 
     Timer32_initModule(TIMER32_1_BASE, // There are two timers, we are using the one with the index 1
                        TIMER32_PRESCALER_1, // The prescaler value is 1; The clock is not divided before feeding the counter

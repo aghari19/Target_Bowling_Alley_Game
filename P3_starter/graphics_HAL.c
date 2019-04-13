@@ -15,11 +15,8 @@
 
 HWTimer_t timer0, timer1;
 
-#define T10MS_IN_US 100000
-#define BLOCKING_WAIT_TIME 1000000
-
-#define BALL_Y_STEP 10                // The ball moves in y direction 10 pixesl per step
-#define BALL_TIME_STEP T10MS_IN_US
+#define BALL_Y_STEP 12
+#define BALL_TIME_STEP 1000000
 
 void make_5digit_NumString(unsigned int num, char *string)
 {
@@ -76,30 +73,28 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position)
 {
     static unsigned int y = 115;
     static bool moveBallUp = true;
-    static OneShotSWTimer_t yMoveTimer;
     static bool init = true;
     if (init)
     {
-        InitOneShotSWTimer(&yMoveTimer, &timer0, BALL_TIME_STEP);
-        StartOneShotSWTimer(&yMoveTimer);
-
+        startOneShotTimer0(BALL_TIME_STEP);
         init = false;
     }
-    if(OneShotSWTimerExpired(&yMoveTimer))
+
+    if(timer0Expired())
     {
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-        Graphics_fillCircle(g_sContext_p, position, y, 4);
+        Graphics_fillCircle(g_sContext_p, position, y, 3);
 
-        StartOneShotSWTimer(&yMoveTimer);
+        startOneShotTimer0(BALL_TIME_STEP);
         if (moveBallUp)
         {
             y = y - BALL_Y_STEP;
-            if (y > 1)
+            if (y <= 0)
                 moveBallUp = false;
         }
 
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-        Graphics_fillCircle(g_sContext_p, position, y, 4);
+        Graphics_fillCircle(g_sContext_p, position, y, 3);
     }
     return moveBallUp;
 }
@@ -136,7 +131,7 @@ int MoveCircle(Graphics_Context *g_sContext_p, bool joyStickPushedUp, bool joySt
     if ((joyStickPushedUp && (y>55)) || (joyStickPushedDown && (y<90)))
     {
 
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, 20, y, 4);
 
         if (joyStickPushedDown)
@@ -145,7 +140,7 @@ int MoveCircle(Graphics_Context *g_sContext_p, bool joyStickPushedUp, bool joySt
             y = y-20;
 
 
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
         Graphics_fillCircle(g_sContext_p, 20, y, 4);
 
     }
@@ -232,9 +227,9 @@ void display_Empty(Graphics_Context *g_sContext_p)
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
 }
 
-void display_game(Graphics_Context *g_sContext_p, int score[3])
+void display_game(Graphics_Context *g_sContext_p, int score[3], int ball_position)
 {
-    static int ball_position = 55;
+    //static int ball_position = 55;
     Graphics_Rectangle Rec = {80,5, 120, 120};
 
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);

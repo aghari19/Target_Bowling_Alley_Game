@@ -22,6 +22,8 @@
 typedef enum {game_display, throw_mode, move, direction, speed1, speed2} game_features;
 typedef enum {right, not_right} joystick_position_r;
 typedef enum {left, not_left} joystick_position_l;
+typedef enum {up, not_up} joystick_position_u;
+
 
 button_t BoosterS1 = {GPIO_PORT_P5, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0_BASE};
 button_t BoosterS2 = {GPIO_PORT_P3, GPIO_PIN5, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
@@ -40,6 +42,9 @@ bool IsJoystickPushedtoLeft5_debounced(unsigned vx);
 bool IsJoystickPushedtoLeft10_debounced(unsigned vx);
 bool IsJoystickPushedtoLeft15_debounced(unsigned vx);
 
+bool IsjoyStickPushedUp1(unsigned vy);
+bool IsjoyStickPushedUp2(unsigned vy);
+
 void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
 {
     static unsigned vx, vy;
@@ -57,6 +62,8 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     bool joyStickPushedtoRight = false;
     bool joyStickPushedtoLeft = false;
 
+    bool JoyStickNotPushed = true;
+
     bool joyStickPushedtoRight5 = false;
     bool joyStickPushedtoRight10 = false;
     bool joyStickPushedtoRight15 = false;
@@ -71,13 +78,17 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     boosterS1 = ButtonPushed(&BoosterS1);
     boosterS2 = ButtonPushed(&BoosterS2);
 
+    joyStickPushedUp1 = IsjoyStickPushedUp1(vy);
+    joyStickPushedUp2 = IsjoyStickPushedUp2(vy);
+
     switch(mode)
     {
     case game_display:
-        display_game(g_sContext_p, score);
+        display_game(g_sContext_p, score, position);
         mode = throw_mode;
         break;
     case throw_mode:
+        display_game(g_sContext_p, score, position);
         if(boosterS1)
         {
             mode = move;
@@ -106,9 +117,8 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         position = Move_Ball(g_sContext_p, joyStickPushedtoLeft,joyStickPushedtoRight);
         if(boosterS1)
         {
+            display_Empty(g_sContext_p);
             mode = throw_mode;
-            Graphics_drawLineV(g_sContext_p, position, 108, 116);
-            Graphics_fillCircle(g_sContext_p, position, 107, 1);
         }
         break;
     case direction:
@@ -119,10 +129,33 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         joyStickPushedtoLeft10 = IsJoystickPushedtoLeft10_debounced(vx);
         joyStickPushedtoLeft15 = IsJoystickPushedtoLeft15_debounced(vx);
 
+        if( vx > 8000 && vx <7900)
+        {
+            JoyStickNotPushed  = false;
+        }
+        else
+        {
+            JoyStickNotPushed = true;
+        }
+
+        if(JoyStickNotPushed)
+        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
+            Graphics_drawLine(g_sContext_p, position, 115, position, 1);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+
+        }
         if(joyStickPushedtoLeft5)
         {
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-            Graphics_drawLine(g_sContext_p, position, 115, position+60, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
             Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
@@ -130,53 +163,134 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         if(joyStickPushedtoLeft10)
         {
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLine(g_sContext_p, position, 115, position, 1);
             Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
-            Graphics_drawLine(g_sContext_p, position, 115, position-30, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
         if(joyStickPushedtoLeft15)
         {
+            display_game(g_sContext_p, score,position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-            Graphics_drawLine(g_sContext_p, position, 115, position-30, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
-            Graphics_drawLine(g_sContext_p, position, 115, position-60, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
         if(joyStickPushedtoRight5)
         {
+            display_game(g_sContext_p, score, position);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
             Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
         if(joyStickPushedtoRight10)
         {
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
             Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
-            Graphics_drawLine(g_sContext_p, position, 115, position+30, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
         if(joyStickPushedtoRight15)
         {
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-            Graphics_drawLine(g_sContext_p, position, 115, position+30, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
-            Graphics_drawLine(g_sContext_p, position, 115, position+60, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
         if(boosterS2)
         {
+            display_Empty(g_sContext_p);
             mode = throw_mode;
         }
         break;
     case speed1:
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, position, 107, 1);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_drawLineV(g_sContext_p, position, 106, 114);
+        Graphics_fillCircle(g_sContext_p, position, 105, 1);
+        if(joyStickPushedUp1 == false)
+        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLineV(g_sContext_p, position, 106, 114);
+            Graphics_fillCircle(g_sContext_p, position, 105, 1);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
+
+        }
         break;
     case speed2:
         break;
     }
+}
 
+bool IsjoyStickPushedUp1(unsigned vy)
+{
+    static bool isPushed = false;
+    static joystick_position_u position = not_up;
+    switch(position)
+    {
+    case up:
+        if(vy > 13000 && vy < 8500)
+        {
+            position = not_up;
+        }
+        isPushed = false;
+        break;
+    case not_up:
+        if(vy<= 13000 && vy>9000)
+        {
+            position = up;
+            isPushed = true;
+        }
+        break;
+    }
+   return isPushed;
+}
+bool IsjoyStickPushedUp2(unsigned vy)
+{
+    return false;
 }
 bool IsJoystickPushedtoRight5_debounced(unsigned vx)
 {
@@ -185,14 +299,14 @@ bool IsJoystickPushedtoRight5_debounced(unsigned vx)
     switch(position)
     {
         case right:
-            if(vx <= 7000)
+            if(vx <= 8500)
             {
                 position = not_right;
             }
             isPushed = false;
             break;
         case not_right:
-            if(vx >8000 && vx < 9500)
+            if(vx >9000 && vx < 11000)
             {
                 isPushed = true;
                 position = right;
@@ -208,14 +322,14 @@ bool IsJoystickPushedtoRight10_debounced(unsigned vx)
     switch(position)
     {
         case right:
-            if(vx <= 10000)
+            if(vx <= 11500)
             {
                 position = not_right;
             }
             isPushed = false;
             break;
         case not_right:
-            if(vx >10500 && vx < 13000)
+            if(vx >12000 && vx < 13500)
             {
                 isPushed = true;
                 position = right;
@@ -231,14 +345,14 @@ bool IsJoystickPushedtoRight15_debounced(unsigned vx)
     switch(position)
     {
         case right:
-            if(vx <= 13500)
+            if(vx <= 14500)
             {
                 position = not_right;
             }
             isPushed = false;
             break;
         case not_right:
-            if(vx >14000)
+            if(vx >14500)
             {
                 isPushed = true;
                 position = right;
@@ -254,14 +368,14 @@ bool IsJoystickPushedtoLeft5_debounced(unsigned vx)
     switch(position)
     {
     case left:
-        if(vx <= 4000)
+        if(vx <= 6000)
         {
             position = not_left;
         }
         isPushed = false;
         break;
     case not_left:
-        if(vx>= 4000 && vx< 5000)
+        if(vx> 6000 && vx< 7960)
         {
             isPushed = true;
             position = left;
@@ -277,14 +391,14 @@ bool IsJoystickPushedtoLeft10_debounced(unsigned vx)
     switch(position)
     {
     case left:
-        if(vx <= 2000)
+        if(vx <= 3500)
         {
             position = not_left;
         }
         isPushed = false;
         break;
     case not_left:
-        if(vx>= 2000 && vx< 4000)
+        if(vx > 3500 && vx < 5500)
         {
             isPushed = true;
             position = left;
@@ -300,14 +414,14 @@ bool IsJoystickPushedtoLeft15_debounced(unsigned vx)
     switch(position)
     {
     case left:
-        if(vx <= 500)
+        if(vx <= 84)
         {
             position = not_left;
         }
         isPushed = false;
         break;
     case not_left:
-        if(vx>= 500 && vx< 2000)
+        if(vx> 84 && vx< 3000)
         {
             isPushed = true;
             position = left;
