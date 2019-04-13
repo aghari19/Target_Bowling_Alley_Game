@@ -252,11 +252,14 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         Graphics_fillCircle(g_sContext_p, position, 105, 1);
         if(joyStickPushedUp1 == false)
         {
-            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            display_Empty(g_sContext_p);
+            mode = throw_mode;
+            //display_game(g_sContext_p, score, position);
+            /*Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_drawLineV(g_sContext_p, position, 106, 114);
             Graphics_fillCircle(g_sContext_p, position, 105, 1);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-            display_game(g_sContext_p, score, position);
+            display_game(g_sContext_p, score, position);*/
 
         }
         break;
