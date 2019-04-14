@@ -18,6 +18,32 @@ HWTimer_t timer0, timer1;
 #define BALL_Y_STEP 12
 #define BALL_TIME_STEP 1000000
 
+void random_ball(Graphics_Context *g_sContext_p, unsigned int vx, unsigned int vy)
+{
+    static unsigned x = 1;
+    static unsigned y = 1;
+
+    static int i = 0;
+    static int j = 0;
+    static int values = 0;
+
+    x = vx & x;
+    y = vy & y;
+
+    if(i != 5)
+    {
+        values = values << 1 | (x ^ y);
+        i++;
+    }
+    if(i == 5)
+    {
+        i = 0;
+        values = 0;
+    }
+    x = 1;
+    y = 1;
+}
+
 void make_5digit_NumString(unsigned int num, char *string)
 {
     string[0]= (        num  / 10000) +'0';
@@ -92,10 +118,10 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position)
             if (y <= 0)
                 moveBallUp = false;
         }
-
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, position, y, 3);
     }
+
     return moveBallUp;
 }
 
@@ -131,7 +157,7 @@ int MoveCircle(Graphics_Context *g_sContext_p, bool joyStickPushedUp, bool joySt
     if ((joyStickPushedUp && (y>55)) || (joyStickPushedDown && (y<90)))
     {
 
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
         Graphics_fillCircle(g_sContext_p, 20, y, 4);
 
         if (joyStickPushedDown)
@@ -140,7 +166,7 @@ int MoveCircle(Graphics_Context *g_sContext_p, bool joyStickPushedUp, bool joySt
             y = y-20;
 
 
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, 20, y, 4);
 
     }

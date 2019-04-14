@@ -24,5 +24,8 @@ void display_game(Graphics_Context *g_sContext_p, int score[3], int position);
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight);
 bool roll_ball(Graphics_Context *g_sContext_p, int position);
 
+void random_ball(Graphics_Context *g_sContext_p, unsigned int x, unsigned int y);
+
+
 
 #endif /* GRAPHICS_HAL_H_ */

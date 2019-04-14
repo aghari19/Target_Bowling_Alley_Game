@@ -23,13 +23,13 @@ int main(void)
 
     //startOneShotTimer0(COUNT);
 
-    /*while(!timer0Expired())
-    {
+   // while(!timer0Expired())
+    //{
 
-    }
+    //}
 
-    if(timer0Expired())
-    {*/
+    //if(timer0Expired())
+    //{
         while (1)
         {
             game();

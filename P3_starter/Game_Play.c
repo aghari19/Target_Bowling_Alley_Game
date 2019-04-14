@@ -19,7 +19,7 @@
 #define LEFT_THRESHOLD_1  7000
 #define LEFT_THRESHOLD_2  2000
 
-typedef enum {game_display, throw_mode, move, direction, speed1, speed2} game_features;
+typedef enum {game_display, throw_mode, move, direction, venti, grande} game_features;
 typedef enum {right, not_right} joystick_position_r;
 typedef enum {left, not_left} joystick_position_l;
 typedef enum {up, not_up} joystick_position_u;
@@ -99,11 +99,11 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         else if(joyStickPushedUp1)
         {
-            mode = speed1;
+            mode = venti;
         }
         else if(joyStickPushedUp2)
         {
-            mode = speed2;
+            mode = grande;
         }
         else if(JoyStick_pressed1() | return_value)
         {
@@ -244,7 +244,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             mode = throw_mode;
         }
         break;
-    case speed1:
+    case venti:
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
         Graphics_fillCircle(g_sContext_p, position, 107, 1);
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
@@ -263,7 +263,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
 
         }
         break;
-    case speed2:
+    case grande:
         break;
     }
 }
