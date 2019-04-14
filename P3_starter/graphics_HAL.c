@@ -16,7 +16,7 @@
 HWTimer_t timer0, timer1;
 
 #define BALL_Y_STEP 12
-#define BALL_TIME_STEP 1000000
+#define BALL_TIME_STEP 3840000
 
 void random_ball(Graphics_Context *g_sContext_p, unsigned int vx, unsigned int vy)
 {
@@ -115,13 +115,15 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position)
         if (moveBallUp)
         {
             y = y - BALL_Y_STEP;
-            if (y <= 0)
-                moveBallUp = false;
         }
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, position, y, 3);
+        if (y <= 0)
+        {
+            y = 0;
+            moveBallUp = false;
+        }
     }
-
     return moveBallUp;
 }
 

@@ -51,13 +51,14 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     static int position = 55;
     static game_features mode = game_display;
 
-    bool return_value = false;
+    static  bool return_value = false;
 
     bool boosterS1 = false;
     bool boosterS2 = false;
 
     bool joyStickPushedUp1 = false;
     bool joyStickPushedUp2 = false;
+    bool JoyStickPressed = false;
 
     bool joyStickPushedtoRight = false;
     bool joyStickPushedtoLeft = false;
@@ -78,6 +79,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     boosterS1 = ButtonPushed(&BoosterS1);
     boosterS2 = ButtonPushed(&BoosterS2);
 
+    JoyStickPressed = ButtonPushed(&Button_JoyStick);
     joyStickPushedUp1 = IsjoyStickPushedUp1(vy);
     joyStickPushedUp2 = IsjoyStickPushedUp2(vy);
 
@@ -105,7 +107,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             mode = grande;
         }
-        else if(JoyStick_pressed1() | return_value)
+        else if(JoyStickPressed | return_value)
         {
             return_value = roll_ball(g_sContext_p, position);
         }
@@ -125,7 +127,8 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         joyStickPushedtoRight5 = IsJoystickPushedtoRight5_debounced(vx);
         joyStickPushedtoRight10 = IsJoystickPushedtoRight10_debounced(vx);
         joyStickPushedtoRight15 = IsJoystickPushedtoRight15_debounced(vx);
-        joyStickPushedtoLeft5 = IsJoystickPushedtoLeft5_debounced(vx);
+        joyStickPushedtoLeft5 = true;
+                //IsJoystickPushedtoLeft5_debounced(vx);
         joyStickPushedtoLeft10 = IsJoystickPushedtoLeft10_debounced(vx);
         joyStickPushedtoLeft15 = IsJoystickPushedtoLeft15_debounced(vx);
 
