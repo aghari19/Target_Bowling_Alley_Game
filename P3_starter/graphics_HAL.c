@@ -18,30 +18,28 @@ HWTimer_t timer0, timer1;
 #define BALL_Y_STEP 12
 #define BALL_TIME_STEP 3840000
 
-void random_ball(Graphics_Context *g_sContext_p, unsigned int vx, unsigned int vy)
+int random_ball(Graphics_Context *g_sContext_p, unsigned vx, unsigned vy)
 {
-    static unsigned x = 1;
-    static unsigned y = 1;
+    int x = 1;
+    int y = 1;
 
     static int i = 0;
-    static int j = 0;
     static int values = 0;
 
     x = vx & x;
     y = vy & y;
-
-    if(i != 5)
-    {
-        values = values << 1 | (x ^ y);
-        i++;
-    }
     if(i == 5)
     {
         i = 0;
         values = 0;
     }
-    x = 1;
-    y = 1;
+    if(i != 5)
+    {
+        values = values << 1 | (x ^ y);
+        i++;
+    }
+
+    return values;
 }
 
 void make_5digit_NumString(unsigned int num, char *string)
@@ -97,11 +95,13 @@ void make_3digit_NumString(unsigned int num, char *string)
 
 bool roll_ball(Graphics_Context *g_sContext_p, int position)
 {
-    static unsigned int y = 115;
+    static int y = 115;
     static bool moveBallUp = true;
     static bool init = true;
     if (init)
     {
+        moveBallUp = true;
+        y = 115;
         startOneShotTimer0(BALL_TIME_STEP);
         init = false;
     }
@@ -120,7 +120,7 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position)
         Graphics_fillCircle(g_sContext_p, position, y, 3);
         if (y <= 0)
         {
-            y = 0;
+            init = true;
             moveBallUp = false;
         }
     }

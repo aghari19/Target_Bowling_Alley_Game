@@ -20,6 +20,7 @@
 #define LEFT_THRESHOLD_2  2000
 
 typedef enum {game_display, throw_mode, move, direction, venti, grande} game_features;
+typedef enum {Center, left5, left10, left15, Right5, Right10, Right15} angle;
 typedef enum {right, not_right} joystick_position_r;
 typedef enum {left, not_left} joystick_position_l;
 typedef enum {up, not_up} joystick_position_u;
@@ -48,10 +49,12 @@ bool IsjoyStickPushedUp2(unsigned vy);
 void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
 {
     static unsigned vx, vy;
+    static int values = 0;
     static int position = 55;
     static game_features mode = game_display;
+    static angle trajectory = Center;
 
-    static  bool return_value = false;
+    static bool return_value = false;
 
     bool boosterS1 = false;
     bool boosterS2 = false;
@@ -83,14 +86,25 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     joyStickPushedUp1 = IsjoyStickPushedUp1(vy);
     joyStickPushedUp2 = IsjoyStickPushedUp2(vy);
 
+    /*int j = 0;
+    for (; j < 5; j++)
+    {
+        values = random_ball(g_sContext_p, vx, vy);
+    }*/
     switch(mode)
     {
     case game_display:
         display_game(g_sContext_p, score, position);
+        //Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        //Graphics_fillCircle(g_sContext_p, values+20, 3, 2);
         mode = throw_mode;
         break;
     case throw_mode:
-        display_game(g_sContext_p, score, position);
+        turnOff_BoosterpackLED_blue();
+
+        //Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        //Graphics_fillCircle(g_sContext_p, values+20, 3, 2);
+        //display_game(g_sContext_p, score, position);
         if(boosterS1)
         {
             mode = move;
@@ -109,8 +123,21 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         else if(JoyStickPressed | return_value)
         {
+            turnOn_BoosterpackLED_blue();
             return_value = roll_ball(g_sContext_p, position);
+            if(return_value ==  false)
+            {
+                display_game(g_sContext_p, score, position);
+            }
+            /*for (; j < 5; j++)
+            {
+                values = random_ball(g_sContext_p, vx, vy);
+            }
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
+            Graphics_fillCircle(g_sContext_p, values+20, 3, 2);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);*/
         }
+
         break;
     case move:
         turnOn_BoosterpackLED_green();
@@ -121,14 +148,14 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             display_Empty(g_sContext_p);
             mode = throw_mode;
+            display_game(g_sContext_p, score, position);
         }
         break;
     case direction:
         joyStickPushedtoRight5 = IsJoystickPushedtoRight5_debounced(vx);
         joyStickPushedtoRight10 = IsJoystickPushedtoRight10_debounced(vx);
         joyStickPushedtoRight15 = IsJoystickPushedtoRight15_debounced(vx);
-        joyStickPushedtoLeft5 = true;
-                //IsJoystickPushedtoLeft5_debounced(vx);
+        joyStickPushedtoLeft5 = IsJoystickPushedtoLeft5_debounced(vx);
         joyStickPushedtoLeft10 = IsJoystickPushedtoLeft10_debounced(vx);
         joyStickPushedtoLeft15 = IsJoystickPushedtoLeft15_debounced(vx);
 
@@ -162,6 +189,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
             Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            JoyStickNotPushed  = false;
 
         }
         if(joyStickPushedtoLeft10)
@@ -179,6 +207,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
             Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            JoyStickNotPushed  = false;
         }
         if(joyStickPushedtoLeft15)
         {
@@ -195,6 +224,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
             Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            JoyStickNotPushed  = false;
         }
         if(joyStickPushedtoRight5)
         {
@@ -245,6 +275,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             display_Empty(g_sContext_p);
             mode = throw_mode;
+            display_game(g_sContext_p, score, position);
         }
         break;
     case venti:
