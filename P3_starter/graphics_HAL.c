@@ -129,7 +129,6 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position)
 
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)
 {
-    turnOff_BoosterpackLED_blue();
     static unsigned int x = 55;
 
     if ((moveToLeft && (x>40)) || (moveToRight && (x<70)))

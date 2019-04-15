@@ -86,25 +86,18 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     joyStickPushedUp1 = IsjoyStickPushedUp1(vy);
     joyStickPushedUp2 = IsjoyStickPushedUp2(vy);
 
-    /*int j = 0;
+    int j = 0;
     for (; j < 5; j++)
     {
         values = random_ball(g_sContext_p, vx, vy);
-    }*/
+    }
     switch(mode)
     {
     case game_display:
         display_game(g_sContext_p, score, position);
-        //Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-        //Graphics_fillCircle(g_sContext_p, values+20, 3, 2);
         mode = throw_mode;
         break;
     case throw_mode:
-        turnOff_BoosterpackLED_blue();
-
-        //Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-        //Graphics_fillCircle(g_sContext_p, values+20, 3, 2);
-        //display_game(g_sContext_p, score, position);
         if(boosterS1)
         {
             mode = move;
@@ -123,24 +116,19 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         else if(JoyStickPressed | return_value)
         {
-            turnOn_BoosterpackLED_blue();
             return_value = roll_ball(g_sContext_p, position);
             if(return_value ==  false)
             {
                 display_game(g_sContext_p, score, position);
             }
-            /*for (; j < 5; j++)
-            {
-                values = random_ball(g_sContext_p, vx, vy);
-            }
-            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
-            Graphics_fillCircle(g_sContext_p, values+20, 3, 2);
-            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);*/
         }
-
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, values, 4, 2);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        values = random_ball(g_sContext_p, vx, vy);
+        Graphics_fillCircle(g_sContext_p, values, 4, 2);
         break;
     case move:
-        turnOn_BoosterpackLED_green();
         joyStickPushedtoRight = IsJoystickPushedtoRight_debounced(vx);
         joyStickPushedtoLeft = IsJoystickPushedtoLeft_debounced(vx);
         position = Move_Ball(g_sContext_p, joyStickPushedtoLeft,joyStickPushedtoRight);
