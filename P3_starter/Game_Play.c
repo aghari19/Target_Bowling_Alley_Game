@@ -19,7 +19,7 @@
 #define LEFT_THRESHOLD_1  7000
 #define LEFT_THRESHOLD_2  2000
 
-typedef enum {game_display, throw_mode, move, direction, venti, grande} game_features;
+typedef enum {game_display, throw_mode,roll_mode, move, direction, venti, grande} game_features;
 typedef enum {Center, left5, left10, left15, Right5, Right10, Right15} angle;
 typedef enum {right, not_right} joystick_position_r;
 typedef enum {left, not_left} joystick_position_l;
@@ -50,6 +50,8 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
 {
     static unsigned vx, vy;
     static int values = 0;
+    static int before_value = 0;
+    static int count = 0;
     static int position = 55;
     static game_features mode = game_display;
     static angle trajectory = Center;
@@ -76,6 +78,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     bool joyStickPushedtoLeft10 = false;
     bool joyStickPushedtoLeft15 = false;
 
+    count = count + 1;
 
     getSampleJoyStick(&vx, &vy);
 
@@ -86,18 +89,22 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     joyStickPushedUp1 = IsjoyStickPushedUp1(vy);
     joyStickPushedUp2 = IsjoyStickPushedUp2(vy);
 
-    int j = 0;
-    for (; j < 5; j++)
+    if(count == 5)
     {
         values = random_ball(g_sContext_p, vx, vy);
+        count = 0;
     }
+
     switch(mode)
     {
     case game_display:
         display_game(g_sContext_p, score, position);
+        Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
+        before_value = values;
         mode = throw_mode;
         break;
     case throw_mode:
+        display_game(g_sContext_p, score, position);
         if(boosterS1)
         {
             mode = move;
@@ -116,17 +123,22 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         else if(JoyStickPressed | return_value)
         {
-            return_value = roll_ball(g_sContext_p, position);
-            if(return_value ==  false)
-            {
-                display_game(g_sContext_p, score, position);
-            }
+            mode = roll_mode;
         }
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-        Graphics_fillCircle(g_sContext_p, values, 4, 2);
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-        values = random_ball(g_sContext_p, vx, vy);
-        Graphics_fillCircle(g_sContext_p, values, 4, 2);
+
+        break;
+    case roll_mode:
+        return_value = roll_ball(g_sContext_p, position);
+        if(return_value ==  false)
+        {
+            display_game(g_sContext_p, score, position);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
+            before_value = values;
+            mode = throw_mode;
+        }
         break;
     case move:
         joyStickPushedtoRight = IsJoystickPushedtoRight_debounced(vx);
@@ -136,7 +148,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             display_Empty(g_sContext_p);
             mode = throw_mode;
-            display_game(g_sContext_p, score, position);
+            Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
         }
         break;
     case direction:
@@ -263,7 +275,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             display_Empty(g_sContext_p);
             mode = throw_mode;
-            display_game(g_sContext_p, score, position);
+            Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
         }
         break;
     case venti:
