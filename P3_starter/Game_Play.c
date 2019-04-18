@@ -46,8 +46,9 @@ bool IsJoystickPushedtoLeft15_debounced(unsigned vx);
 bool IsjoyStickPushedUp1(unsigned vy);
 bool IsjoyStickPushedUp2(unsigned vy);
 
-void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
+bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
 {
+    static bool inint = true;
     static unsigned vx, vy;
     static int values = 0;
     static int before_value = 0;
@@ -55,8 +56,22 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     static int position = 55;
     static game_features mode = game_display;
     static angle trajectory = Center;
-
+    static int roll_count = 0;
     static bool return_value = false;
+    if(inint)
+    {
+        values = 0;
+        before_value = 0;
+        count = 0;
+        position = 55;
+        mode = game_display;
+        trajectory = Center;
+        roll_count = 0;
+        return_value = false;
+        inint = false;
+    }
+    bool game_over = false;
+
 
     bool boosterS1 = false;
     bool boosterS2 = false;
@@ -124,11 +139,16 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         else if(JoyStickPressed | return_value)
         {
             mode = roll_mode;
+            roll_count = roll_count + 1;
+            if(roll_count == 10)
+            {
+                game_over = true;
+                inint = true;
+            }
         }
-
         break;
     case roll_mode:
-        return_value = roll_ball(g_sContext_p, position);
+        return_value = roll_ball(g_sContext_p, position, before_value, score);
         if(return_value ==  false)
         {
             display_game(g_sContext_p, score, position);
@@ -148,7 +168,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             display_Empty(g_sContext_p);
             mode = throw_mode;
-            Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
+            Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);
         }
         break;
     case direction:
@@ -300,6 +320,7 @@ void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     case grande:
         break;
     }
+    return game_over;
 }
 
 bool IsjoyStickPushedUp1(unsigned vy)

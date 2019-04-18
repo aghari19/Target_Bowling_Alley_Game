@@ -15,8 +15,8 @@
 
 HWTimer_t timer0, timer1;
 
-#define BALL_Y_STEP 12
-#define BALL_TIME_STEP 3840000
+#define BALL_Y_STEP 1
+#define BALL_TIME_STEP 384000
 
 int random_ball(Graphics_Context *g_sContext_p, unsigned vx, unsigned vy)
 {
@@ -40,6 +40,20 @@ int random_ball(Graphics_Context *g_sContext_p, unsigned vx, unsigned vy)
     }
 
     return values;
+}
+
+void display_random_ball(Graphics_Context *g_sContext_p, int *values, int *before_values)
+{
+    static int i = 1;
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(g_sContext_p, *before_values+40, 5, 2);
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+    Graphics_fillCircle(g_sContext_p,*values+40, 5, 2);
+    if(i >= 2)
+    {
+        before_values = values;
+    }
+    i = i + 1;
 }
 
 void make_5digit_NumString(unsigned int num, char *string)
@@ -93,11 +107,12 @@ void make_3digit_NumString(unsigned int num, char *string)
 
 }
 
-bool roll_ball(Graphics_Context *g_sContext_p, int position)
+bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, int score[3])
 {
     static int y = 115;
     static bool moveBallUp = true;
     static bool init = true;
+    bool hit = false;
     if (init)
     {
         moveBallUp = true;
@@ -116,15 +131,52 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position)
         {
             y = y - BALL_Y_STEP;
         }
+        if(y == 5)
+        {
+            if((((position-3) <= (before_value+42)) && ((before_value+42)<=(position+3))) |
+                    (((position-3) >= (before_value+38)) && ((before_value+38)>=(position+3))))
+            {
+                hit  = true;
+            }
+        }
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, position, y, 3);
-        if (y <= 0)
+        if (y < -3)
         {
             init = true;
             moveBallUp = false;
         }
     }
     return moveBallUp;
+}
+
+void score_points(Graphics_Context *g_sContext_p,int score[3], bool hit)
+{
+    static int scores[10];
+    static int i = 0;
+    if(hit == false)
+    {
+        if(i == 0)
+        {
+            scores[0] = 0;
+        }
+        else
+        {
+            scores[i] = scores[i-1];
+        }
+    }
+    else if(hit == true)
+    {
+        if(i == 0)
+        {
+            scores[0] = 1;
+        }
+        else
+        {
+            scores[i] = scores[i-1]+1;
+        }
+    }
+    i++;
 }
 
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)

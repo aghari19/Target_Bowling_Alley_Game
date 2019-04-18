@@ -18,7 +18,7 @@
 #define DOWN1 2000
 #define DOWN2 500
 
-typedef enum {Main, Menu, how_to_play, highscore, main_game} game_options;
+typedef enum {Main, Menu, how_to_play, highscore, main_game, game_over} game_options;
 typedef enum {up, not_up} joystick_position_up;
 typedef enum {down, not_down} joystick_position_down;
 
@@ -26,7 +26,7 @@ button_t JoyStick_Button = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, T
 
 bool IsJoystickDown_debounced(unsigned Vy);
 bool IsJoystickUp_debounced(unsigned Vy);
-void Bowling_Alley(Graphics_Context *g_sContext_p,int score[3]);
+bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3]);
 
 void game()
 {
@@ -37,6 +37,7 @@ void game()
     static int i = 0;
     static int score[3] = {0,0,0};
     static bool isMenu = false;
+    static bool game_status;
 
     bool joystick_button_pressed = false;
     bool joyStickPushedUp = false;
@@ -95,7 +96,21 @@ void game()
             }
             break;
         case main_game:
-            Bowling_Alley(&g_sContext, score);
+            game_status = Bowling_Alley(&g_sContext, score);
+            if(game_status == true)
+            {
+                game = game_over;
+            }
+            break;
+        case game_over:
+            turnOn_BoosterpackLED_red();
+            if(joystick_button_pressed)
+            {
+                display_Empty(&g_sContext);
+                Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
+                game = Menu;
+                isMenu = true;
+            }
             break;
     }
 
