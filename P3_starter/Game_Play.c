@@ -58,6 +58,8 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     static angle trajectory = Center;
     static int roll_count = 0;
     static bool return_value = false;
+    static int scores[10];
+
     if(inint)
     {
         values = 0;
@@ -70,8 +72,9 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         return_value = false;
         inint = false;
     }
-    bool game_over = false;
 
+    bool game_over = false;
+    static int hit = 0;
 
     bool boosterS1 = false;
     bool boosterS2 = false;
@@ -140,7 +143,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             mode = roll_mode;
             roll_count = roll_count + 1;
-            if(roll_count == 10)
+            if(roll_count == 11)
             {
                 game_over = true;
                 inint = true;
@@ -148,15 +151,19 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         break;
     case roll_mode:
-        return_value = roll_ball(g_sContext_p, position, before_value, score);
+        return_value = roll_ball(g_sContext_p, position, before_value, &hit);
         if(return_value ==  false)
         {
             display_game(g_sContext_p, score, position);
+            score_points(g_sContext_p, roll_count, scores, hit);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
             before_value = values;
+            hit = 0;
+            turnOff_BoosterpackLED_red();
+            turnOff_BoosterpackLED_green();
             mode = throw_mode;
         }
         break;

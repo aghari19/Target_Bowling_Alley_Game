@@ -103,7 +103,6 @@ void game()
             }
             break;
         case game_over:
-            turnOn_BoosterpackLED_red();
             if(joystick_button_pressed)
             {
                 display_Empty(&g_sContext);

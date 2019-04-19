@@ -22,12 +22,10 @@ void display_High_Score(Graphics_Context *g_sContext_p, int score[3]);
 void display_game(Graphics_Context *g_sContext_p, int score[3], int position);
 
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight);
-bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, int score[3]);
+bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, int *hit);
 
 int random_ball(Graphics_Context *g_sContext_p, unsigned int x, unsigned int y);
 void display_random_ball(Graphics_Context *g_sContext_p, int *values, int *before_values);
-void score_points(Graphics_Context *g_sContext_p,int score[3], bool hit);
-
-
+void score_points(Graphics_Context *g_sContext_p,int roll_count, int score[10], int hit);
 
 #endif /* GRAPHICS_HAL_H_ */
