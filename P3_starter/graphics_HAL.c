@@ -16,7 +16,6 @@
 HWTimer_t timer0, timer1;
 
 #define BALL_Y_STEP 1
-#define BALL_TIME_STEP 384000
 
 int random_ball(Graphics_Context *g_sContext_p, unsigned vx, unsigned vy)
 {
@@ -107,7 +106,7 @@ void make_3digit_NumString(unsigned int num, char *string)
 
 }
 
-bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, int *hit)
+bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
 {
     static int y = 115;
     static bool moveBallUp = true;
@@ -116,7 +115,7 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, i
     {
         moveBallUp = true;
         y = 115;
-        startOneShotTimer0(BALL_TIME_STEP);
+        startOneShotTimer0(LoadValue);
         init = false;
     }
 
@@ -125,7 +124,7 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, i
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
         Graphics_fillCircle(g_sContext_p, position, y, 3);
 
-        startOneShotTimer0(BALL_TIME_STEP);
+        startOneShotTimer0(LoadValue);
         if (moveBallUp)
         {
             y = y - BALL_Y_STEP;
@@ -350,8 +349,7 @@ void display_game(Graphics_Context *g_sContext_p, int score[3], int ball_positio
     Graphics_drawLineV(g_sContext_p, 35, 5, 120);
 
     Graphics_fillCircle(g_sContext_p, ball_position, 115, 3);
-    Graphics_drawLineV(g_sContext_p, ball_position, 108, 116);
-    Graphics_fillCircle(g_sContext_p, ball_position, 107, 1);
+
 }
 
 void display_High_Score(Graphics_Context *g_sContext_p, int score[3])

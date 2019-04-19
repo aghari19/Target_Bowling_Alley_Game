@@ -19,6 +19,11 @@
 #define LEFT_THRESHOLD_1  7000
 #define LEFT_THRESHOLD_2  2000
 
+#define BALL_TIME_STEP1 240000
+#define BALL_TIME_STEP2 432000
+#define BALL_TIME_STEP3 960000
+
+
 typedef enum {game_display, throw_mode,roll_mode, move, direction, venti, grande} game_features;
 typedef enum {Center, left5, left10, left15, Right5, Right10, Right15} angle;
 typedef enum {right, not_right} joystick_position_r;
@@ -60,6 +65,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     static bool return_value = false;
     static int i = -1;
     static int scores[10];
+    int LoadValue = BALL_TIME_STEP3;
 
     if(inint)
     {
@@ -106,8 +112,6 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     boosterS2 = ButtonPushed(&BoosterS2);
 
     JoyStickPressed = ButtonPushed(&Button_JoyStick);
-    joyStickPushedUp1 = IsjoyStickPushedUp1(vy);
-    joyStickPushedUp2 = IsjoyStickPushedUp2(vy);
 
     if(count == 5)
     {
@@ -135,19 +139,17 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         i = -1;
         if(boosterS1)
         {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_fillCircle(g_sContext_p,position, 104, 1);
+            Graphics_fillCircle(g_sContext_p,position, 107, 1);
+            Graphics_fillCircle(g_sContext_p,position, 102, 1);
+            Graphics_drawLineV(g_sContext_p, position, 102, 120);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             mode = move;
         }
         else if(boosterS2)
         {
             mode = direction;
-        }
-        else if(joyStickPushedUp1)
-        {
-            mode = venti;
-        }
-        else if(joyStickPushedUp2)
-        {
-            mode = grande;
         }
         else if(JoyStickPressed | return_value)
         {
@@ -159,15 +161,50 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
                 inint = true;
             }
         }
+        if(vy > 7900 && vy < 9000)
+        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLineV(g_sContext_p, position, 103, 111);
+            Graphics_fillCircle(g_sContext_p,position, 102, 1);
+            Graphics_drawLineV(g_sContext_p, position, 105, 111);
+            Graphics_fillCircle(g_sContext_p,position, 104, 1);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            Graphics_drawLineV(g_sContext_p, position, 108, 116);
+            Graphics_fillCircle(g_sContext_p,position, 107, 1);
+        }
+        else if(vy>= 9000 && vy< 12000)
+        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLineV(g_sContext_p, position, 108, 111);
+            Graphics_fillCircle(g_sContext_p,position, 107, 1);
+            Graphics_drawLineV(g_sContext_p, position, 103, 111);
+            Graphics_fillCircle(g_sContext_p,position, 102, 1);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            Graphics_drawLineV(g_sContext_p, position, 105, 111);
+            Graphics_fillCircle(g_sContext_p,position, 104, 1);
+            LoadValue = BALL_TIME_STEP2;
+        }
+        else if(vy>= 12000)
+        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLineV(g_sContext_p, position, 108, 111);
+            Graphics_fillCircle(g_sContext_p,position, 107, 1);
+            Graphics_drawLineV(g_sContext_p, position, 105, 111);
+            Graphics_fillCircle(g_sContext_p,position, 104, 1);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            Graphics_drawLineV(g_sContext_p, position, 103, 111);
+            Graphics_fillCircle(g_sContext_p,position, 102, 1);
+            LoadValue = BALL_TIME_STEP1;
+
+        }
         break;
     case roll_mode:
-        return_value = roll_ball(g_sContext_p, position, before_value, &hit);
+        return_value = roll_ball(g_sContext_p, position, before_value, &hit, LoadValue);
         if(return_value ==  false)
         {
             display_game(g_sContext_p, score, position);
             score_points(roll_count, scores, hit);
             i = 0;
-            //display_score(g_sContext_p, roll_count, scores);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
@@ -319,6 +356,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         }
         break;
     case venti:
+        turnOn_BoosterpackLED_blue();
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
         Graphics_fillCircle(g_sContext_p, position, 107, 1);
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
@@ -328,13 +366,8 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             display_Empty(g_sContext_p);
             mode = throw_mode;
-            //display_game(g_sContext_p, score, position);
-            /*Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-            Graphics_drawLineV(g_sContext_p, position, 106, 114);
-            Graphics_fillCircle(g_sContext_p, position, 105, 1);
-            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-            display_game(g_sContext_p, score, position);*/
-
+            Graphics_fillCircle(g_sContext_p, values+40, 5, 2);
+            i = 0;
         }
         break;
     case grande:
