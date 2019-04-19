@@ -137,31 +137,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             }
         }
         i = -1;
-        if(boosterS1)
-        {
-            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
-            Graphics_fillCircle(g_sContext_p,position, 104, 1);
-            Graphics_fillCircle(g_sContext_p,position, 107, 1);
-            Graphics_fillCircle(g_sContext_p,position, 102, 1);
-            Graphics_drawLineV(g_sContext_p, position, 102, 120);
-            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
-            mode = move;
-        }
-        else if(boosterS2)
-        {
-            mode = direction;
-        }
-        else if(JoyStickPressed | return_value)
-        {
-            mode = roll_mode;
-            roll_count = roll_count + 1;
-            if(roll_count == 11)
-            {
-                game_over = true;
-                inint = true;
-            }
-        }
-        if(vy > 7900 && vy < 9000)
+        if(vy > 7500 && vy < 9000)
         {
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_drawLineV(g_sContext_p, position, 103, 111);
@@ -197,6 +173,31 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             LoadValue = BALL_TIME_STEP1;
 
         }
+        if(boosterS1)
+        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_fillCircle(g_sContext_p,position, 104, 1);
+            Graphics_fillCircle(g_sContext_p,position, 107, 1);
+            Graphics_fillCircle(g_sContext_p,position, 102, 1);
+            Graphics_drawLineV(g_sContext_p, position, 102, 111);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            mode = move;
+        }
+        else if(boosterS2)
+        {
+            mode = direction;
+        }
+        else if(JoyStickPressed | return_value)
+        {
+            mode = roll_mode;
+            roll_count = roll_count + 1;
+            if(roll_count == 11)
+            {
+                game_over = true;
+                inint = true;
+            }
+        }
+
         break;
     case roll_mode:
         return_value = roll_ball(g_sContext_p, position, before_value, &hit, LoadValue);
@@ -236,23 +237,23 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         joyStickPushedtoLeft10 = IsJoystickPushedtoLeft10_debounced(vx);
         joyStickPushedtoLeft15 = IsJoystickPushedtoLeft15_debounced(vx);
 
-        if( vx > 8000 && vx <7900)
+        if(vx > 7500 && vx < 8000)
         {
-            JoyStickNotPushed  = false;
-        }
-        else
-        {
-            JoyStickNotPushed = true;
-        }
-
-        if(JoyStickNotPushed)
-        {
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLine(g_sContext_p, position, 115, position - 10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
+            Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
+            Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
+            Graphics_drawLine(g_sContext_p, position, 115, position+30, 7);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+            display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
             Graphics_drawLine(g_sContext_p, position, 115, position, 1);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
 
         }
-        if(joyStickPushedtoLeft5)
+        if(vx> 6000 && vx<7500)
         {
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_drawLine(g_sContext_p, position, 115, position, 1);
@@ -269,7 +270,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             JoyStickNotPushed  = false;
 
         }
-        if(joyStickPushedtoLeft10)
+        if(vx>4000 && vx<=6000)
         {
             display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
@@ -286,7 +287,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             JoyStickNotPushed  = false;
         }
-        if(joyStickPushedtoLeft15)
+        if(vx>50 && vx<4000)
         {
             display_game(g_sContext_p, score,position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
@@ -303,10 +304,11 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             JoyStickNotPushed  = false;
         }
-        if(joyStickPushedtoRight5)
+        if(vx>= 8000 && vx <= 10000)
         {
             display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLine(g_sContext_p, position, 115, position, 1);
             Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
             Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
             Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
@@ -318,10 +320,11 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_drawLine(g_sContext_p, position, 115, position+10, 1);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
-        if(joyStickPushedtoRight10)
+        if(vx>10000 && vx<= 13000)
         {
             display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_drawLine(g_sContext_p, position, 115, position, 1);
             Graphics_drawLine(g_sContext_p, position, 115, position-10, 1);
             Graphics_drawLine(g_sContext_p, position, 115, position-20, 4);
             Graphics_drawLine(g_sContext_p, position, 115, position-30, 7);
@@ -333,7 +336,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_drawLine(g_sContext_p, position, 115, position+20, 4);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         }
-        if(joyStickPushedtoRight15)
+        if(vx> 13000 && vx<= 16000)
         {
             display_game(g_sContext_p, score, position);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
