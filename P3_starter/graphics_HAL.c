@@ -17,6 +17,14 @@ HWTimer_t timer0, timer1;
 
 #define BALL_Y_STEP 1
 
+#define SIN5 0.0871
+#define SIN10 0.1736
+#define SIN15 0.2588
+
+#define COS5 0.9961
+#define COS10 0.9848
+#define COS15 0.9659
+
 int random_ball(Graphics_Context *g_sContext_p, unsigned vx, unsigned vy)
 {
     int x = 1;
@@ -148,12 +156,291 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, i
     return moveBallUp;
 }
 
+bool roll_ball5(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
+{
+    static double y = 115;
+    static double x;
+    static bool moveBallUp = true;
+    static bool init = true;
+    if (init)
+    {
+        moveBallUp = true;
+        x = position;
+        y = 115;
+        startOneShotTimer0(LoadValue);
+        init = false;
+    }
+    if(timer0Expired())
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        startOneShotTimer0(LoadValue);
+        if (moveBallUp)
+        {
+            x = x - BALL_Y_STEP*SIN5;
+            y = y - BALL_Y_STEP*COS5;
+        }
+
+        if(y<6 && y>= 5 )
+        {
+            if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
+                    (((x-3) >= (before_value+38)) && ((before_value+38)>=(x+3))))
+            {
+                *hit = 1;
+            }
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        if (y < -3)
+        {
+            init = true;
+            moveBallUp = false;
+        }
+    }
+    return moveBallUp;
+}
+
+bool roll_ball10(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
+{
+    static double y = 115;
+    static double x;
+    static bool moveBallUp = true;
+    static bool init = true;
+    if (init)
+    {
+        moveBallUp = true;
+        x = position;
+        y = 115;
+        startOneShotTimer0(LoadValue);
+        init = false;
+    }
+    if(timer0Expired())
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        startOneShotTimer0(LoadValue);
+        if (moveBallUp)
+        {
+            x = x - BALL_Y_STEP*SIN10;
+            y = y - BALL_Y_STEP*COS10;
+        }
+
+        if(y<6 && y>= 5 )
+        {
+            if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
+                    (((x-3) >= (before_value+38)) && ((before_value+38)>=(x+3))))
+            {
+                *hit = 1;
+            }
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        if (y < -3)
+        {
+            init = true;
+            moveBallUp = false;
+        }
+    }
+    return moveBallUp;
+}
+
+bool roll_ball15(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
+{
+    static double y = 115;
+    static double x;
+    static bool moveBallUp = true;
+    static bool init = true;
+    if (init)
+    {
+        moveBallUp = true;
+        x = position;
+        y = 115;
+        startOneShotTimer0(LoadValue);
+        init = false;
+    }
+    if(timer0Expired())
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        startOneShotTimer0(LoadValue);
+        if (moveBallUp)
+        {
+            x = x - BALL_Y_STEP*SIN15;
+            y = y - BALL_Y_STEP*COS15;
+        }
+
+        if(y<6 && y>= 5 )
+        {
+            if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
+                    (((x-3) >= (before_value+38)) && ((before_value+38)>=(x+3))))
+            {
+                *hit = 1;
+            }
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        if (y < -3)
+        {
+            init = true;
+            moveBallUp = false;
+        }
+    }
+    return moveBallUp;
+}
+
+bool roll_ballR5(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
+{
+    static double y = 115;
+    static double x;
+    static bool moveBallUp = true;
+    static bool init = true;
+    if (init)
+    {
+        moveBallUp = true;
+        x = position;
+        y = 115;
+        startOneShotTimer0(LoadValue);
+        init = false;
+    }
+    if(timer0Expired())
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        startOneShotTimer0(LoadValue);
+        if (moveBallUp)
+        {
+            x = x + BALL_Y_STEP*SIN5;
+            y = y - BALL_Y_STEP*COS5;
+        }
+
+        if(y<6 && y>= 5 )
+        {
+            if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
+                    (((x-3) >= (before_value+38)) && ((before_value+38)>=(x+3))))
+            {
+                *hit = 1;
+            }
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        if (y < -3)
+        {
+            init = true;
+            moveBallUp = false;
+        }
+    }
+    return moveBallUp;
+}
+
+bool roll_ballR10(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
+{
+    static double y = 115;
+    static double x;
+    static bool moveBallUp = true;
+    static bool init = true;
+    if (init)
+    {
+        moveBallUp = true;
+        x = position;
+        y = 115;
+        startOneShotTimer0(LoadValue);
+        init = false;
+    }
+    if(timer0Expired())
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        startOneShotTimer0(LoadValue);
+        if (moveBallUp)
+        {
+            x = x + BALL_Y_STEP*SIN10;
+            y = y - BALL_Y_STEP*COS10;
+        }
+
+        if(y<6 && y>= 5 )
+        {
+            if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
+                    (((x-3) >= (before_value+38)) && ((before_value+38)>=(x+3))))
+            {
+                *hit = 1;
+            }
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        if (y < -3)
+        {
+            init = true;
+            moveBallUp = false;
+        }
+    }
+    return moveBallUp;
+}
+
+bool roll_ballR15(Graphics_Context *g_sContext_p, int position, int before_value, int *hit, int LoadValue)
+{
+    static double y = 115;
+    static double x;
+    static bool moveBallUp = true;
+    static bool init = true;
+    if (init)
+    {
+        moveBallUp = true;
+        x = position;
+        y = 115;
+        startOneShotTimer0(LoadValue);
+        init = false;
+    }
+    if(timer0Expired())
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        startOneShotTimer0(LoadValue);
+        if (moveBallUp)
+        {
+            x = x + BALL_Y_STEP*SIN15;
+            y = y - BALL_Y_STEP*COS15;
+        }
+
+        if(y<6 && y>= 5 )
+        {
+            if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
+                    (((x-3) >= (before_value+38)) && ((before_value+38)>=(x+3))))
+            {
+                *hit = 1;
+            }
+        }
+
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+
+        if (y < -3)
+        {
+            init = true;
+            moveBallUp = false;
+        }
+    }
+    return moveBallUp;
+}
 void score_points(int roll_count, int score[10], int hit)
 {
-    //turnOn_BoosterpackLED_red();
     if(hit == 1)
     {
-        //turnOn_BoosterpackLED_red();
         if(roll_count == 1)
         {
             score[roll_count-1] = 1;
