@@ -26,6 +26,7 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, i
 
 int random_ball(Graphics_Context *g_sContext_p, unsigned int x, unsigned int y);
 void display_random_ball(Graphics_Context *g_sContext_p, int *values, int *before_values);
-void score_points(Graphics_Context *g_sContext_p,int roll_count, int score[10], int hit);
+void score_points(int roll_count, int score[10], int hit);
+void display_score(Graphics_Context *g_sContext_p,int roll_count, int score[10]);
 
 #endif /* GRAPHICS_HAL_H_ */

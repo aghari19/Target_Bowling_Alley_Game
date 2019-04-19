@@ -58,6 +58,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     static angle trajectory = Center;
     static int roll_count = 0;
     static bool return_value = false;
+    static int i = -1;
     static int scores[10];
 
     if(inint)
@@ -70,6 +71,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         trajectory = Center;
         roll_count = 0;
         return_value = false;
+        i = -1;
         inint = false;
     }
 
@@ -123,6 +125,14 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         break;
     case throw_mode:
         display_game(g_sContext_p, score, position);
+        if(i == 0)
+        {
+            for(i = 1; i<=roll_count;i++)
+            {
+                display_score(g_sContext_p, i, scores);
+            }
+        }
+        i = -1;
         if(boosterS1)
         {
             mode = move;
@@ -155,7 +165,9 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         if(return_value ==  false)
         {
             display_game(g_sContext_p, score, position);
-            score_points(g_sContext_p, roll_count, scores, hit);
+            score_points(roll_count, scores, hit);
+            i = 0;
+            //display_score(g_sContext_p, roll_count, scores);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
@@ -174,6 +186,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         if(boosterS1)
         {
             display_Empty(g_sContext_p);
+            i = 0;
             mode = throw_mode;
             Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);
         }

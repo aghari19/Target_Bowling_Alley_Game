@@ -149,7 +149,7 @@ bool roll_ball(Graphics_Context *g_sContext_p, int position, int before_value, i
     return moveBallUp;
 }
 
-void score_points(Graphics_Context *g_sContext_p,int roll_count, int score[10], int hit)
+void score_points(int roll_count, int score[10], int hit)
 {
     //turnOn_BoosterpackLED_red();
     if(hit == 1)
@@ -177,31 +177,33 @@ void score_points(Graphics_Context *g_sContext_p,int roll_count, int score[10], 
          }
     }
 
-     char num[2];
-     static int positionx = 85;
-     static int positiony = 12;
-     if(roll_count == 0)
-     {
-         positionx = 85;
-         positiony = 12;
-     }
-
-    make_2digit_NumString(score[roll_count], num);
-    if (roll_count % 2 != 0)
+}
+void display_score(Graphics_Context *g_sContext_p,int roll_count, int score[10])
+{
+    char num[2];
+    static int positionx = 85;
+    static int positiony = 12;
+    if(roll_count == 1)
     {
         positionx = 85;
-        Graphics_drawString(g_sContext_p, (int8_t *) num, -1, positionx,
-                            positiony, true);
+        positiony = 12;
     }
-    else
-    {
-        positionx = 105;
-        Graphics_drawString(g_sContext_p, (int8_t *) num, -1, positionx,
-                            positiony, true);
-        positiony = positiony + 23;
-    }
-}
 
+   make_2digit_NumString(score[roll_count-1], num);
+   if (roll_count % 2 != 0)
+   {
+       positionx = 85;
+       Graphics_drawString(g_sContext_p, (int8_t *) num, -1, positionx,
+                           positiony, true);
+   }
+   else
+   {
+       positionx = 105;
+       Graphics_drawString(g_sContext_p, (int8_t *) num, -1, positionx,
+                           positiony, true);
+       positiony = positiony + 23;
+   }
+}
 int Move_Ball(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight)
 {
     static unsigned int x = 55;
