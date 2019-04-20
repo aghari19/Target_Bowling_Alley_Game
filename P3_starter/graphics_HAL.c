@@ -12,8 +12,7 @@
 #include "ADC_HAL.h"
 #include "graphics_HAL.h"
 #include "Timer32_HAL.h"
-
-HWTimer_t timer0, timer1;
+#include "sound.h"
 
 #define BALL_Y_STEP 1
 
@@ -24,6 +23,8 @@ HWTimer_t timer0, timer1;
 #define COS5 0.9961
 #define COS10 0.9848
 #define COS15 0.9659
+
+song_note_t note = {note_f4, 100};
 
 int random_ball(Graphics_Context *g_sContext_p, unsigned vx, unsigned vy)
 {
@@ -441,6 +442,7 @@ void score_points(int roll_count, int score[10], int hit)
 {
     if(hit == 1)
     {
+        PlayNote_blocking(note);
         if(roll_count == 1)
         {
             score[roll_count-1] = 1;

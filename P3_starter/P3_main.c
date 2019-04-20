@@ -4,6 +4,8 @@
 #include "graphics_HAL.h"
 #include "Timer32_HAL.h"
 #include "ADC_HAL.h"
+#include "sound.h"
+extern HWTimer_t timer0, timer1;
 
 #define COUNT 144000000
 
@@ -85,7 +87,9 @@ void initialize()
                        TIMER32_32BIT, // The counter is used in 32-bit mode; the alternative is 16-bit mode
                        TIMER32_PERIODIC_MODE); //This options is irrelevant for a one-shot timer
 
-
+    initHWTimer0();
+    //initHWTimer1();
+    InitSound();
     initADC();
     initJoyStick();
     startADC();

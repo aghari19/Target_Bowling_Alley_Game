@@ -11,6 +11,7 @@
 #include "graphics_HAL.h"
 #include "Timer32_HAL.h"
 #include "ADC_HAL.h"
+#include "sound.h"
 
 #define UP1 15000
 #define UP2 13000
@@ -22,11 +23,16 @@ typedef enum {Main, Menu, how_to_play, highscore, main_game, game_over} game_opt
 typedef enum {up, not_up} joystick_position_up;
 typedef enum {down, not_down} joystick_position_down;
 
+song_note_t note1 = {note_f4, 100};
+
 button_t JoyStick_Button = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 
 bool IsJoystickDown_debounced(unsigned Vy);
 bool IsJoystickUp_debounced(unsigned Vy);
 bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3]);
+void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image);
+
+extern Graphics_Image Jon_Bunting8BPP_UNCOMP;
 
 void game()
 {
@@ -38,6 +44,7 @@ void game()
     static int score[3] = {0,0,0};
     static bool isMenu = false;
     static bool game_status;
+    static bool playing;
 
     bool joystick_button_pressed = false;
     bool joyStickPushedUp = false;
@@ -103,12 +110,17 @@ void game()
             }
             break;
         case game_over:
-            if(joystick_button_pressed)
+            turnOn_BoosterpackLED_red();
+            drawGameOver(&g_sContext, &Jon_Bunting8BPP_UNCOMP);
+            playing = PlayNote_nonblocking(note1);
+            if(playing)
             {
-                display_Empty(&g_sContext);
-                Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
-                game = Menu;
-                isMenu = true;
+                if(joystick_button_pressed)
+                {
+                    display_Empty(&g_sContext);
+                    Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
+                    game = Menu;
+                }
             }
             break;
     }
@@ -121,6 +133,13 @@ void game()
     }
 }
 
+void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image)
+{
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_RED);
+    Graphics_drawImage(g_sContext_p, Image, 0, 0);
+    int8_t Over[12] = "!GAME OVER!";
+    Graphics_drawString(g_sContext_p, Over, -1, 25, 100, false);
+}
 bool IsJoystickUp_debounced(unsigned Vy)
 {
     static bool isPushed = false;

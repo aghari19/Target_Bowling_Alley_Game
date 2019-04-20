@@ -21,7 +21,7 @@
 
 #define BALL_TIME_STEP1 240000
 #define BALL_TIME_STEP2 432000
-#define BALL_TIME_STEP3 960000
+#define BALL_TIME_STEP3 10000
 
 
 typedef enum {game_display, throw_mode,roll_mode, move, direction, venti, grande} game_features;
