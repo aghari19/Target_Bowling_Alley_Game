@@ -20,11 +20,14 @@
 #define DOWN2 500
 
 typedef enum {Main, Menu, how_to_play, highscore, main_game, game_over} game_options;
+typedef enum {how_to_play1, how_to_play2, how_to_play3} ins;
 typedef enum {up, not_up} joystick_position_up;
 typedef enum {down, not_down} joystick_position_down;
 
 song_note_t note1 = {note_f4, 100};
 
+button_t BoostS1 = {GPIO_PORT_P5, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0_BASE};
+button_t BoostS2 = {GPIO_PORT_P3, GPIO_PIN5, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 button_t JoyStick_Button = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 
 bool IsJoystickDown_debounced(unsigned Vy);
@@ -39,18 +42,25 @@ void game()
     static unsigned vx, vy;
     static Graphics_Context g_sContext;
     static game_options game = Main;
+    static ins play = how_to_play1;
     static int menu_location = 55;
     static int i = 0;
     static int score[3] = {0,0,0};
     static bool isMenu = false;
     static bool game_status;
     static bool playing;
+    static bool check1 = false;
+    static bool check2 = false;
 
     bool joystick_button_pressed = false;
+    bool Booster1_Pressed  = false;
+    bool Booster2_Pressed = false;
     bool joyStickPushedUp = false;
     bool joyStickPushedDown = false;
 
     joystick_button_pressed = ButtonPushed(&JoyStick_Button);
+    Booster1_Pressed = ButtonPushed(&BoostS1);
+    Booster2_Pressed = ButtonPushed(&BoostS2);
     getSampleJoyStick(&vx, &vy);
 
     switch (game)
@@ -78,17 +88,73 @@ void game()
             {
                 display_Empty(&g_sContext);
                 game = how_to_play;
+                play = how_to_play1;
                 isMenu = false;
             }
             break;
         case how_to_play:
-            display_How_To_Play(&g_sContext);
-            if(joystick_button_pressed)
+            switch(play)
             {
-                display_Empty(&g_sContext);
-                Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
-                game = Menu;
-                isMenu = true;
+                case how_to_play1:
+                    display_How_To_Play(&g_sContext);
+                    if(Booster1_Pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        play = how_to_play2;
+                    }
+                    if(Booster2_Pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        play = how_to_play3;
+                    }
+                    if(joystick_button_pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
+                        game = Menu;
+                        isMenu = true;
+                    }
+                break;
+                case how_to_play2:
+                    display_How_To_PlayS1(&g_sContext);
+                    if(Booster2_Pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        play = how_to_play3;
+                    }
+                    if(Booster1_Pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        play = how_to_play1;
+                    }
+                    if(joystick_button_pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
+                        game = Menu;
+                        isMenu = true;
+                    }
+                break;
+                case how_to_play3:
+                    display_How_To_PlayS2(&g_sContext);
+                    if(Booster1_Pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        play = how_to_play2;
+                    }
+                    if(Booster2_Pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        play = how_to_play1;
+                    }
+                    if(joystick_button_pressed)
+                    {
+                        display_Empty(&g_sContext);
+                        Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
+                        game = Menu;
+                        isMenu = true;
+                    }
+                break;
             }
             break;
         case highscore:
@@ -112,16 +178,14 @@ void game()
         case game_over:
             turnOn_BoosterpackLED_red();
             drawGameOver(&g_sContext, &Jon_Bunting8BPP_UNCOMP);
-            playing = PlayNote_nonblocking(note1);
-            if(playing)
-            {
+            //playing = PlayNote_nonblocking(note1);
                 if(joystick_button_pressed)
                 {
                     display_Empty(&g_sContext);
                     Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
                     game = Menu;
+                    isMenu = true;
                 }
-            }
             break;
     }
 

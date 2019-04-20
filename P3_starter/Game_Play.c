@@ -21,7 +21,7 @@
 
 #define BALL_TIME_STEP1 240000
 #define BALL_TIME_STEP2 432000
-#define BALL_TIME_STEP3 10000
+#define BALL_TIME_STEP3 960000
 
 
 typedef enum {game_display, throw_mode,roll_mode, move, direction, venti, grande} game_features;
@@ -54,7 +54,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
     static bool return_value = false;
     static int i = -1;
     static int scores[10];
-    int LoadValue = BALL_TIME_STEP3;
+    static int LoadValue = BALL_TIME_STEP3;
 
     if(inint)
     {
@@ -170,6 +170,18 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             roll_count = roll_count + 1;
             if(roll_count == 11)
             {
+                if(scores[9] > score[0])
+                {
+                    score[0] = scores[9];
+                }
+                else if((scores[9] > score[1]) && (scores[9] < score[0]))
+                {
+                    score[1] = scores[9];
+                }
+                else if(scores[9] > score[2])
+                {
+                    score[2] = scores[9];
+                }
                 game_over = true;
                 inint = true;
             }

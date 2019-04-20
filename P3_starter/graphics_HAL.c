@@ -676,3 +676,28 @@ void display_How_To_Play(Graphics_Context *g_sContext_p)
     Graphics_drawString(g_sContext_p,(int8_t*) "S1: Throw & position", -1, 5, 95, true);
     Graphics_drawString(g_sContext_p,(int8_t*) "S2: Throw to direct", -1, 5, 110, true);
 }
+
+void display_How_To_PlayS1(Graphics_Context *g_sContext_p)
+{
+    Graphics_drawString(g_sContext_p,(int8_t*) "How to Play:", -1, 24, 5, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Position Mode:", -1, 5, 20, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Use the Joystick Left", -1, 5, 35, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "/Right to pick the", -1, 5, 50, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "ball's starting", -1, 5, 65, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "position", -1, 5, 80, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "S1: Change to Direct", -1, 5, 95, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "S1: Change to Throw", -1, 5, 110, true);
+}
+
+void display_How_To_PlayS2(Graphics_Context *g_sContext_p)
+{
+    Graphics_drawString(g_sContext_p,(int8_t*) "How to Play:", -1, 24, 5, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Direction Mode:", -1, 5, 20, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "Use the Joystick to", -1, 5, 35, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "pick the trajectory", -1, 5, 50, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "angle for the ball's", -1, 5, 65, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "starting path", -1, 5, 80, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "S1: Change to Throw", -1, 5, 95, true);
+    Graphics_drawString(g_sContext_p,(int8_t*) "S1: Change to Position", -1, 5, 110, true);
+}
+
