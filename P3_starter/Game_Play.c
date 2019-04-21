@@ -117,6 +117,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             {
                 if(scores[9] > score[0])
                 {
+
                     score[2] = score[1];
                     score[1] = score[0];
                     score[0] = scores[9];
@@ -145,6 +146,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             Graphics_drawLineV(g_sContext_p, position, 108, 116);
             Graphics_fillCircle(g_sContext_p,position, 107, 1);
+            LoadValue = BALL_TIME_STEP3;
         }
         else if(vy>= 9000 && vy< 12000)
         {
@@ -169,7 +171,6 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             Graphics_drawLineV(g_sContext_p, position, 103, 111);
             Graphics_fillCircle(g_sContext_p,position, 102, 1);
             LoadValue = BALL_TIME_STEP1;
-
         }
         if(boosterS1)
         {
@@ -188,6 +189,10 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         else if(JoyStickPressed | return_value)
         {
             mode = roll_mode;
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+            Graphics_Rectangle Rec1 = {0,50, 34, 120};
+            Graphics_fillRectangle(g_sContext_p, &Rec1);
+            Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
             roll_count = roll_count + 1;
         }
         break;
@@ -223,7 +228,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         if(return_value ==  false)
         {
             display_game(g_sContext_p, score, position);
-            score_points(roll_count, scores, hit);
+            score_points(g_sContext_p,roll_count, scores, hit);
             i = 0;
             Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
             Graphics_fillCircle(g_sContext_p, before_value+40, 5, 2);

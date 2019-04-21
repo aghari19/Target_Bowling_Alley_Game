@@ -469,11 +469,15 @@ bool roll_ballR15(Graphics_Context *g_sContext_p, int position, int before_value
     }
     return moveBallUp;
 }
-void score_points(int roll_count, int score[10], int hit)
+void score_points(Graphics_Context *g_sContext_p, int roll_count, int score[10], int hit)
 {
     if(hit == 1)
     {
         PlayNote_blocking(note);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_TURQUOISE);
+        Graphics_drawString(g_sContext_p,(int8_t*) "Nice", -1, 1, 50, true);
+        Graphics_drawString(g_sContext_p,(int8_t*) "Throw", -1, 1, 65, true);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         if(roll_count == 1)
         {
             score[roll_count-1] = 1;
@@ -485,7 +489,12 @@ void score_points(int roll_count, int score[10], int hit)
     }
     else if(hit == 0)
     {
-        //turnOn_BoosterpackLED_green();
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_TURQUOISE);
+        Graphics_drawString(g_sContext_p,(int8_t*) "Better", -1, 0, 50, true);
+        Graphics_drawString(g_sContext_p,(int8_t*) "Luck", -1, 1, 65, true);
+        Graphics_drawString(g_sContext_p,(int8_t*) "Next", -1, 1, 80, true);
+        Graphics_drawString(g_sContext_p,(int8_t*) "Time", -1, 1, 95, true);
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
          if(roll_count == 1)
          {
               score[roll_count-1] = 0;

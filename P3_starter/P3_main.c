@@ -92,7 +92,7 @@ void initialize()
     Timer32_startTimer(TIMER32_1_BASE, true);
 
     initHWTimer0();
-    initHWTimer1();
+    //initHWTimer1();
     InitSound();
     initADC();
     initJoyStick();
