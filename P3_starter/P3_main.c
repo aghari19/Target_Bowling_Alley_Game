@@ -6,7 +6,7 @@
 #include "ADC_HAL.h"
 #include "sound.h"
 
-extern HWTimer_t timer0, timer1;
+//extern HWTimer_t timer0, timer1;
 
 #define COUNT 144000000
 
@@ -22,22 +22,22 @@ int main(void)
 
     extern Graphics_Image BowlingEvolution8BPP_UNCOMP;
 
-    //Graphics_drawImage(&g_sContext, &BowlingEvolution8BPP_UNCOMP, 0, 0);
+    Graphics_drawImage(&g_sContext, &BowlingEvolution8BPP_UNCOMP, 0, 0);
 
-    //startOneShotTimer0(COUNT);
+    startOneShotTimer0(COUNT);
 
-   // while(!timer0Expired())
-    //{
+    while(!timer0Expired())
+    {
 
-    //}
+    }
 
-    //if(timer0Expired())
-    //{
+    if(timer0Expired())
+    {
         while (1)
         {
             game();
         }
-    //}
+    }
 }
 
 void initialize()
@@ -88,8 +88,11 @@ void initialize()
                        TIMER32_32BIT, // The counter is used in 32-bit mode; the alternative is 16-bit mode
                        TIMER32_PERIODIC_MODE); //This options is irrelevant for a one-shot timer
 
+    Timer32_setCount(TIMER32_1_BASE, 1);
+    Timer32_startTimer(TIMER32_1_BASE, true);
+
     initHWTimer0();
-    //initHWTimer1();
+    initHWTimer1();
     InitSound();
     initADC();
     initJoyStick();

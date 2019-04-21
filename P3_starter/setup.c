@@ -24,7 +24,9 @@ typedef enum {how_to_play1, how_to_play2, how_to_play3} ins;
 typedef enum {up, not_up} joystick_position_up;
 typedef enum {down, not_down} joystick_position_down;
 
-song_note_t note1 = {note_f4, 100};
+song_note_t note1 = {note_c3, 50};
+song_note_t note2 = {note_e4, 100};
+song_note_t note3 = {note_f4, 100};
 
 button_t BoostS1 = {GPIO_PORT_P5, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0_BASE};
 button_t BoostS2 = {GPIO_PORT_P3, GPIO_PIN5, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
@@ -48,7 +50,7 @@ void game()
     static int score[3] = {0,0,0};
     static bool isMenu = false;
     static bool game_status;
-    static bool playing;
+    static bool playing = true;
     static bool check1 = false;
     static bool check2 = false;
 
@@ -178,9 +180,15 @@ void game()
         case game_over:
             turnOn_BoosterpackLED_red();
             drawGameOver(&g_sContext, &Jon_Bunting8BPP_UNCOMP);
-            //playing = PlayNote_nonblocking(note1);
+            if(playing == true)
+            {
+                //PlayNote_blocking(note1);
+                //PlayNote_blocking(note2);
+                //playing = PlayNote_nonblocking(note3);
+            }
                 if(joystick_button_pressed)
                 {
+                    playing = false;
                     display_Empty(&g_sContext);
                     Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
                     game = Menu;

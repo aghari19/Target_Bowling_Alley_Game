@@ -195,7 +195,7 @@ bool roll_ball5(Graphics_Context *g_sContext_p, int position, int before_value, 
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
-        if (y < -3)
+        if (y < -4)
         {
             init = true;
             moveBallUp = false;
@@ -209,6 +209,7 @@ bool roll_ball10(Graphics_Context *g_sContext_p, int position, int before_value,
     static double y = 115;
     static double x;
     static bool moveBallUp = true;
+    static bool gutter = false;
     static bool init = true;
     if (init)
     {
@@ -216,6 +217,7 @@ bool roll_ball10(Graphics_Context *g_sContext_p, int position, int before_value,
         x = position;
         y = 115;
         startOneShotTimer0(LoadValue);
+        gutter = false;
         init = false;
     }
     if(timer0Expired())
@@ -224,9 +226,15 @@ bool roll_ball10(Graphics_Context *g_sContext_p, int position, int before_value,
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
         startOneShotTimer0(LoadValue);
-        if (moveBallUp)
+        if ((moveBallUp) && (!gutter))
         {
             x = x - BALL_Y_STEP*SIN10;
+            y = y - BALL_Y_STEP*COS10;
+        }
+
+        if((x<= 40) && (moveBallUp))
+        {
+            gutter = true;
             y = y - BALL_Y_STEP*COS10;
         }
 
@@ -242,7 +250,7 @@ bool roll_ball10(Graphics_Context *g_sContext_p, int position, int before_value,
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
-        if (y < -3)
+        if (y < -4)
         {
             init = true;
             moveBallUp = false;
@@ -256,6 +264,7 @@ bool roll_ball15(Graphics_Context *g_sContext_p, int position, int before_value,
     static double y = 115;
     static double x;
     static bool moveBallUp = true;
+    static bool gutter = false;
     static bool init = true;
     if (init)
     {
@@ -263,6 +272,7 @@ bool roll_ball15(Graphics_Context *g_sContext_p, int position, int before_value,
         x = position;
         y = 115;
         startOneShotTimer0(LoadValue);
+        gutter = false;
         init = false;
     }
     if(timer0Expired())
@@ -271,9 +281,15 @@ bool roll_ball15(Graphics_Context *g_sContext_p, int position, int before_value,
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
         startOneShotTimer0(LoadValue);
-        if (moveBallUp)
+        if ((moveBallUp) && (!gutter))
         {
             x = x - BALL_Y_STEP*SIN15;
+            y = y - BALL_Y_STEP*COS15;
+        }
+
+        if((x<= 40) && (moveBallUp))
+        {
+            gutter = true;
             y = y - BALL_Y_STEP*COS15;
         }
 
@@ -289,7 +305,7 @@ bool roll_ball15(Graphics_Context *g_sContext_p, int position, int before_value,
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
-        if (y < -3)
+        if (y < -4)
         {
             init = true;
             moveBallUp = false;
@@ -350,6 +366,7 @@ bool roll_ballR10(Graphics_Context *g_sContext_p, int position, int before_value
     static double y = 115;
     static double x;
     static bool moveBallUp = true;
+    static bool gutter = false;
     static bool init = true;
     if (init)
     {
@@ -357,6 +374,7 @@ bool roll_ballR10(Graphics_Context *g_sContext_p, int position, int before_value
         x = position;
         y = 115;
         startOneShotTimer0(LoadValue);
+        gutter = false;
         init = false;
     }
     if(timer0Expired())
@@ -365,12 +383,17 @@ bool roll_ballR10(Graphics_Context *g_sContext_p, int position, int before_value
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
         startOneShotTimer0(LoadValue);
-        if (moveBallUp)
+        if ((moveBallUp) && (!gutter))
         {
             x = x + BALL_Y_STEP*SIN10;
             y = y - BALL_Y_STEP*COS10;
         }
 
+        if((x>= 70) && (moveBallUp))
+        {
+            gutter = true;
+            y = y - BALL_Y_STEP*COS10;
+        }
         if(y<6 && y>= 5 )
         {
             if((((x-3) <= (before_value+42)) && ((before_value+42)<=(x+3))) |
@@ -383,7 +406,7 @@ bool roll_ballR10(Graphics_Context *g_sContext_p, int position, int before_value
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
-        if (y < -3)
+        if (y < -4)
         {
             init = true;
             moveBallUp = false;
@@ -397,6 +420,7 @@ bool roll_ballR15(Graphics_Context *g_sContext_p, int position, int before_value
     static double y = 115;
     static double x;
     static bool moveBallUp = true;
+    static bool gutter = false;
     static bool init = true;
     if (init)
     {
@@ -404,6 +428,7 @@ bool roll_ballR15(Graphics_Context *g_sContext_p, int position, int before_value
         x = position;
         y = 115;
         startOneShotTimer0(LoadValue);
+        gutter = false;
         init = false;
     }
     if(timer0Expired())
@@ -412,9 +437,15 @@ bool roll_ballR15(Graphics_Context *g_sContext_p, int position, int before_value
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
         startOneShotTimer0(LoadValue);
-        if (moveBallUp)
+        if ((moveBallUp) && (!gutter))
         {
             x = x + BALL_Y_STEP*SIN15;
+            y = y - BALL_Y_STEP*COS15;
+        }
+
+        if((x>=70) && (moveBallUp))
+        {
+            gutter = true;
             y = y - BALL_Y_STEP*COS15;
         }
 
@@ -430,7 +461,7 @@ bool roll_ballR15(Graphics_Context *g_sContext_p, int position, int before_value
         Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
         Graphics_fillCircle(g_sContext_p, x, y, 3);
 
-        if (y < -3)
+        if (y < -4)
         {
             init = true;
             moveBallUp = false;
@@ -621,7 +652,6 @@ void display_Empty(Graphics_Context *g_sContext_p)
 
 void display_game(Graphics_Context *g_sContext_p, int score[3], int ball_position)
 {
-    //static int ball_position = 55;
     Graphics_Rectangle Rec = {80,5, 120, 120};
 
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);

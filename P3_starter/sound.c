@@ -3,7 +3,7 @@
 
 
 #define SYSTEMCLOCK 48000000
-extern HWTimer_t timer0;
+extern HWTimer_t timer0, timer1;
 
 void InitSound()
 {
@@ -150,7 +150,7 @@ void PlayNote_blocking(song_note_t songNote)
 
     //  the one shot timer for playing the note
     OneShotSWTimer_t noteLength;
-    InitOneShotSWTimer(&noteLength, &timer0, songNote.note_length*1000);
+    InitOneShotSWTimer(&noteLength, &timer1, songNote.note_length*1000);
     StartOneShotSWTimer(&noteLength);
 
     // Start driving the pwm to generate the sound

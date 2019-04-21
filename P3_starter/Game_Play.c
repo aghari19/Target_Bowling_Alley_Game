@@ -67,6 +67,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         roll_count = 0;
         return_value = false;
         i = -1;
+        LoadValue = BALL_TIME_STEP3;
         inint = false;
     }
 
@@ -111,6 +112,26 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             for(i = 1; i<=roll_count;i++)
             {
                 display_score(g_sContext_p, i, scores);
+            }
+            if(roll_count == 10)
+            {
+                if(scores[9] > score[0])
+                {
+                    score[2] = score[1];
+                    score[1] = score[0];
+                    score[0] = scores[9];
+                }
+                else if(scores[9] > score[1])
+                {
+                    score[1] = score[0];
+                    score[1] = scores[9];
+                }
+                else if(scores[9] > score[2])
+                {
+                    score[2] = scores[9];
+                }
+                game_over = true;
+                inint = true;
             }
         }
         i = -1;
@@ -168,25 +189,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
         {
             mode = roll_mode;
             roll_count = roll_count + 1;
-            if(roll_count == 11)
-            {
-                if(scores[9] > score[0])
-                {
-                    score[0] = scores[9];
-                }
-                else if((scores[9] > score[1]) && (scores[9] < score[0]))
-                {
-                    score[1] = scores[9];
-                }
-                else if(scores[9] > score[2])
-                {
-                    score[2] = scores[9];
-                }
-                game_over = true;
-                inint = true;
-            }
         }
-
         break;
     case roll_mode:
         if(trajectory == Center)
