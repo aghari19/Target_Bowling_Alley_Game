@@ -37,7 +37,9 @@ button_t Button_JoyStick = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, T
 
 
 char JoyStick_pressed1();
+//This method is a debounce for the joystick and it returns whether the joystick was pushed right or not.
 bool IsJoystickPushedtoRight_debounced(unsigned Vx);
+//This method is a debounce for the joystick and it returns whether the joystick was pushed left or not.
 bool IsJoystickPushedtoLeft_debounced(unsigned vx);
 
 bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3],int *final_score)
