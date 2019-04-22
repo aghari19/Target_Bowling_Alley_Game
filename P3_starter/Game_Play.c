@@ -40,7 +40,7 @@ char JoyStick_pressed1();
 bool IsJoystickPushedtoRight_debounced(unsigned Vx);
 bool IsJoystickPushedtoLeft_debounced(unsigned vx);
 
-bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
+bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3],int *final_score)
 {
     static bool inint = true;
     static unsigned vx, vy;
@@ -131,6 +131,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
                 {
                     score[2] = scores[9];
                 }
+                *final_score = scores[9];
                 game_over = true;
                 inint = true;
             }
@@ -238,6 +239,7 @@ bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3])
             hit = 0;
             turnOff_BoosterpackLED_red();
             turnOff_BoosterpackLED_green();
+            trajectory = Center;
             mode = throw_mode;
         }
         break;

@@ -20,6 +20,8 @@ int main(void)
     initialize();
     InitGraphics(&g_sContext);
 
+    InitSound();
+
     extern Graphics_Image BowlingEvolution8BPP_UNCOMP;
 
     Graphics_drawImage(&g_sContext, &BowlingEvolution8BPP_UNCOMP, 0, 0);
@@ -93,7 +95,6 @@ void initialize()
 
     initHWTimer0();
     //initHWTimer1();
-    InitSound();
     initADC();
     initJoyStick();
     startADC();

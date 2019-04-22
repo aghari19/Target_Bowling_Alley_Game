@@ -24,18 +24,14 @@ typedef enum {how_to_play1, how_to_play2, how_to_play3} ins;
 typedef enum {up, not_up} joystick_position_up;
 typedef enum {down, not_down} joystick_position_down;
 
-song_note_t note1 = {note_c3, 50};
-song_note_t note2 = {note_e4, 100};
-song_note_t note3 = {note_f4, 100};
-
 button_t BoostS1 = {GPIO_PORT_P5, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0_BASE};
 button_t BoostS2 = {GPIO_PORT_P3, GPIO_PIN5, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 button_t JoyStick_Button = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 
 bool IsJoystickDown_debounced(unsigned Vy);
 bool IsJoystickUp_debounced(unsigned Vy);
-bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3]);
-void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image);
+bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3], int *final_score);
+void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image, int final_score);
 
 extern Graphics_Image Jon_Bunting8BPP_UNCOMP;
 
@@ -51,8 +47,8 @@ void game()
     static bool isMenu = false;
     static bool game_status;
     static bool playing = true;
-    static bool check1 = false;
-    static bool check2 = false;
+
+    static int final_score = 0;
 
     bool joystick_button_pressed = false;
     bool Booster1_Pressed  = false;
@@ -171,7 +167,7 @@ void game()
             }
             break;
         case main_game:
-            game_status = Bowling_Alley(&g_sContext, score);
+            game_status = Bowling_Alley(&g_sContext, score, &final_score);
             if(game_status == true)
             {
                 game = game_over;
@@ -179,21 +175,15 @@ void game()
             break;
         case game_over:
             turnOn_BoosterpackLED_red();
-            drawGameOver(&g_sContext, &Jon_Bunting8BPP_UNCOMP);
-            if(playing == true)
+            drawGameOver(&g_sContext, &Jon_Bunting8BPP_UNCOMP, final_score);
+            if (joystick_button_pressed)
             {
-                //PlayNote_blocking(note1);
-                //PlayNote_blocking(note2);
-                //playing = PlayNote_nonblocking(note3);
+                playing = false;
+                display_Empty(&g_sContext);
+                Graphics_fillCircle(&g_sContext, 20, menu_location, 4);
+                game = Menu;
+                isMenu = true;
             }
-                if(joystick_button_pressed)
-                {
-                    playing = false;
-                    display_Empty(&g_sContext);
-                    Graphics_fillCircle(&g_sContext, 20,menu_location, 4);
-                    game = Menu;
-                    isMenu = true;
-                }
             break;
     }
 
@@ -205,12 +195,16 @@ void game()
     }
 }
 
-void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image)
+void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image, int final_score)
 {
+    char string1[2];
+    make_2digit_NumString(final_score, string1);
+
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_RED);
     Graphics_drawImage(g_sContext_p, Image, 0, 0);
     int8_t Over[12] = "!GAME OVER!";
     Graphics_drawString(g_sContext_p, Over, -1, 25, 100, false);
+    Graphics_drawString(g_sContext_p, (int8_t *)string1, -1, 25, 110, false);
 }
 bool IsJoystickUp_debounced(unsigned Vy)
 {

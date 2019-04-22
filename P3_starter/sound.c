@@ -80,7 +80,7 @@ void ConfigurePWM(Timer_A_PWMConfig *pwmConfig_p, basic_note_t note)
     pwmConfig_p->compareRegister = TIMER_A_CAPTURECOMPARE_REGISTER_4;
 
     // TODO: See if this mode suits you. If not, change it to something else. Ctrl+click can show you other modes. Refer to the user guide for details.
-    pwmConfig_p->compareOutputMode =  TIMER_A_OUTPUTMODE_RESET_SET ;//this is just a preference
+    pwmConfig_p->compareOutputMode =  TIMER_A_OUTPUTMODE_SET_RESET ;//this is just a preference
 
     // The clock source used for the Timer_A. This is not the frequency of the clock. It is a flag that tells what clock source is used.
     // We are using system clock and the below value should not be changed.

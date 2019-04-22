@@ -12,6 +12,7 @@
 
 void draw_Base(Graphics_Context *g_sContext_p);
 int MoveCircle(Graphics_Context *g_sContext_p, bool moveToLeft, bool moveToRight);
+void make_2digit_NumString(unsigned int num, char *string);
 void InitGraphics(Graphics_Context *g_sContext_p);
 void drawXY(Graphics_Context *g_sContext_p, unsigned int x, unsigned int y);
 void draw_One_Zero(Graphics_Context *g_sContext_p, unsigned int vx, unsigned int vy);
