@@ -1,3 +1,5 @@
+//For this project all the comments for the methods are in the .h files.
+
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 
 #include "ButtonLED_HAL.h"
@@ -6,11 +8,12 @@
 #include "ADC_HAL.h"
 #include "sound.h"
 
-//extern HWTimer_t timer0, timer1;
 
 #define COUNT 144000000
 
 void initialize();
+
+//This method is where the main menu before starting the game is implemented
 void game();
 
 int main(void)
@@ -47,23 +50,6 @@ void initialize()
     // stop the watchdog timer
     WDT_A_hold(WDT_A_BASE);
 
-    // initialize the boosterPack LEDs and turn them off except for red LED
-    initialize_BoosterpackLED_red();
-    initialize_BoosterpackLED_green();
-    initialize_BoosterpackLED_blue();
-    initialize_LaunchpadLED1();
-    initialize_LaunchpadLED2_red();
-    initialize_LaunchpadLED2_green();
-    initialize_LaunchpadLED2_blue();
-
-    turnOff_LaunchpadLED1();
-    turnOff_LaunchpadLED2_red();
-    turnOff_LaunchpadLED2_green();
-    turnOff_LaunchpadLED2_blue();
-    turnOff_BoosterpackLED_red();
-    turnOff_BoosterpackLED_green();
-    turnOff_BoosterpackLED_blue();
-
     //initializing the booster Pack buttons
     initialize_BoosterpackTopButton();
     initialize_BoosterpackBottomButton();
@@ -94,7 +80,6 @@ void initialize()
     Timer32_startTimer(TIMER32_1_BASE, true);
 
     initHWTimer0();
-    //initHWTimer1();
     initADC();
     initJoyStick();
     startADC();

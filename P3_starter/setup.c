@@ -28,9 +28,16 @@ button_t BoostS1 = {GPIO_PORT_P5, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_0
 button_t BoostS2 = {GPIO_PORT_P3, GPIO_PIN5, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 button_t JoyStick_Button = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, TIMER32_1_BASE};
 
+//This method is a debounce for the joystick and it returns whether the joystick was pushed down or not.
 bool IsJoystickDown_debounced(unsigned Vy);
+
+//This method is a debounce for the joystick and it returns whether the joystick was pushed up or not.
 bool IsJoystickUp_debounced(unsigned Vy);
+
+//This method is where the game is played and it returns a boolean value that indicates whether the game is over over not
 bool Bowling_Alley(Graphics_Context *g_sContext_p,int score[3], int *final_score);
+
+//This method draws the game over screen when the above method returns true
 void drawGameOver(Graphics_Context *g_sContext_p,Graphics_Image *Image, int final_score);
 
 extern Graphics_Image Jon_Bunting8BPP_UNCOMP;
